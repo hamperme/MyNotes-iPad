@@ -22,7 +22,7 @@ Next milestone: **M0 — compile and run on physical iPad**
 
 ## 最近变更
 
-- **2026-10-13 — GitHub 初始化**：仓库已创建并发布里程碑 Issues #1–#6；代码尚未经过 Xcode 或真机验证。
+- **2026-10-13 — GitHub 初始化与源码同步**：私有仓库 `main` 已发布全部 30 个工程、文档及模板文件，并用 GitHub recursive tree 核对；已建 Issues #1–#6。Swift 静态语法与 YAML 解析通过，但 **Xcode 编译和 iPad 真机测试均未执行**。
 
 - **2026-10-13 — Initial local scaffold**：创建工程源文件、项目生成脚本、开发路线、AI 协作规则及交接文档。验证：Swift 静态语法解析和 YAML 格式检查通过；本地 Git 提交；**未验证 Xcode/真机运行**。
 

@@ -10,7 +10,7 @@
 - **Working branch:** `main` (GitHub remote baseline; earlier offline SHA differs)
 - **Active task:** M0 — first Mac Xcode compile and iPad installation
 - **Issue / PR:** [M0 Issue #1](https://github.com/hamperme/MyNotes-iPad/issues/1); M1–M5 Issues #2–#6; no PR yet
-- **Actual verification:** source files created; Swift syntax parse and YAML checks passed; local Git commit; no macOS / Xcode / Apple Pencil runtime accessible
+- **Actual verification:** GitHub remote main contains all 30 expected tracked files (verified by recursive Git tree) and Issues #1–#6; local Swift syntax parse/YAML parse passed; **no macOS/Xcode/iPad runtime tests**
 - **Status summary:** basic handwriting editor skeleton only; do not claim MVP complete
 
 ## What exists now
@@ -63,5 +63,6 @@ Before handoff:
 
 | Date | Actor | Work | Verification | Next |
 | --- | --- | --- | --- | --- |
+| 2026-10-13 | ChatGPT | Published all 30 source, config, and documentation files to private GitHub main; verified remote tree and Issues #1–#6 | Remote tree count + file fetch, local Swift parse/YAML pass; Xcode/iPad NOT RUN | Issue #1: build on Mac and validate on iPad |
 | 2026-10-13 | ChatGPT | Created GitHub repo and issues #1–#6; published initial docs | GitHub writes confirmed; no Xcode build | Mac build for #1 |
 | 2026-10-13 | ChatGPT | Initial local source scaffold and collaboration docs | Swift syntax parse + YAML checks + local Git commit; Xcode not available | Mac build, device test, push remote |
