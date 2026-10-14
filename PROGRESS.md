@@ -1,12 +1,12 @@
 # Project Progress / 项目进度
 
 Last reviewed: **2026-10-13**  
-Overall: **Simulator and signed device builds passed; iPad installation blocked by disabled Developer Mode**
-Next milestone: **M0 — compile and run on physical iPad**
+Overall: **M0 build/install/launch passed with user-confirmed visible UI; PR review pending; M1 handwriting/persistence acceptance next**
+Next milestone: **M1 — physical Apple Pencil and persistence acceptance (after M0 PR review)**
 
 | 阶段 | 状态 | 当前完成内容 | 完成标准 |
 | --- | --- | --- | --- |
-| M0 工程启动 | 🟡 构建通过，待真机 | 工程生成、Simulator 构建和本地签名真机版本构建成功 | Mac Xcode 构建成功、iPad 安装启动 |
+| M0 工程启动 | 🟢 验收通过，待 PR 审查 | 构建、签名、iPad 安装/启动及进程检查通过；用户确认看到界面 | Mac Xcode 构建成功、iPad 安装启动 |
 | M1 PencilKit 手写 | 🟡 代码草稿 | 画笔、橡皮擦、基础套索、颜色/笔粗、本地保存 | Pencil 真机顺滑使用，重启不丢数据 |
 | M2 多页与模板 | 🟡 部分实现 | 可新增/切换页面及四种模板 | 页面删除/排序、模板位置与笔迹对齐可靠 |
 | M3 笔记管理 | ⚪ 未开始 | 仅简单笔记列表/新建 | 文件夹、重命名、删除与恢复策略 |
@@ -15,12 +15,16 @@ Next milestone: **M0 — compile and run on physical iPad**
 
 ## 现在的主要阻塞项
 
-1. 用户已在本地设置签名，真机版本构建和代码签名校验均通过。安装到 iPad 返回 CoreDeviceError 10005：Developer Mode is disabled；需用户在 iPad 开启开发者模式、重启并确认后重试安装。
-2. M0–M5 Issues #1–#6 保持未完成；Simulator 构建不等于运行或 Apple Pencil 功能验收。
+1. 开发者模式与签名信任阻塞已解除：用户确认信任后，启动退出 0，后续设备进程查询确认 MyNotes 正在运行。用户已确认看到笔记界面；接下来审查 PR #7，并进行 M1 手写/保存验收。
+2. M0 构建/安装/启动验收已满足，Issue #1 暂保留开放等待 PR #7 审查；M1–M5 尚未验收。M0 成功不等于手写功能可用。
 3. 保存失败目前仅写日志、没有用户可见提示；正式记笔记前必须补上。
 4. PDF 页面可编辑笔迹层的坐标与缩放策略还未落地。
 
 ## 最近变更
+
+- **2026-10-13 — M0 真机启动成功（Issue #1 / PR #7）**：用户确认开发者签名已信任后，复用已安装 App 启动退出 0；后续进程查询退出 0，返回同一 MyNotes 进程。安装、启动、存活检查均有实际命令结果；用户随后回复“已看到界面”，完成 M0 可见界面确认；手写/保存功能未验收。
+
+- **2026-10-13 — M0 真机安装成功（Issue #1 / PR #7）**：复用已签名 App，安装退出 0，设备应用查询退出 0 并返回 MyNotes。启动退出 1，系统提示签名/权限/描述文件信任相关安全拒绝；本地复查签名通过、描述文件未过期且包含目标 iPad、应用与团队标识匹配。尚不能据此认定唯一根因，等待用户检查开发者信任提示；未完成启动和功能验收。
 
 - **2026-10-13 — M0 签名后续验收（Issue #1 / PR #7）**：保留用户生成工程内的本地配置，Simulator 复查退出 0。真机版本首次构建因 `No space left on device` 退出 65；降低并发并关闭本次索引写入后构建退出 0，`codesign --verify --deep --strict` 退出 0。实际安装退出 1，设备提示开发者模式未启用；尚未启动 App，不关闭 #1。
 

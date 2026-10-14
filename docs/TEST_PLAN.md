@@ -13,7 +13,9 @@ For every test: record **date, actor, device, OS, Xcode version, command/action,
 | Xcode project generation | macOS 26.5 / XcodeGen 2.45.4 | **Pass** | `./scripts/bootstrap.sh`, exit 0; generated `MyNotes.xcodeproj` |
 | iOS simulator build | Xcode 26.6 / Simulator SDK 26.5 | **Pass** | `./scripts/check.sh`, exit 0; `** BUILD SUCCEEDED **`; unsigned Debug generic Simulator |
 | Signed iOS device build | User-configured local project / iOS SDK 26.5 | **Pass** | Lower-I/O retry exit 0; signature verification exit 0 |
-| iPad device install | Paired iPad Pro 11-inch (3rd generation) | **Blocked** | Actual `devicectl` installation exit 1: Developer Mode disabled (CoreDeviceError 10005) |
+| iPad device install | Paired iPad Pro 11-inch (3rd generation) | **Pass** | After Developer Mode enabled: install exit 0; installed-app query exit 0 and MyNotes present |
+| iPad app launch | Same iPad | **Pass (process)** | After user confirmed trust: launch exit 0; later process query confirms same MyNotes process |
+| Visible app UI | Same iPad; user observation | **Pass (user reported)** | User replied “已看到界面” to the library/new-note screen question; not assistant visual inspection |
 | Apple Pencil ink, eraser, lasso | iPad + Pencil required | **Not run** | M1 test |
 | App restart & drawing persistence | iPad required | **Not run** | M1 test |
 
@@ -42,6 +44,26 @@ For every test: record **date, actor, device, OS, Xcode version, command/action,
 - Device build warnings: AppIntents metadata extraction skipped; all interface orientations must be supported unless full screen is required. These are not runtime acceptance results.
 - Local generated settings also report device family `1,2`, whereas tracked project.yml targets `2`; no local user settings were overwritten or committed. Revisit intended iPad-only targeting separately without destroying signing configuration.
 
+## M0 installed-app follow-up (2026-10-13, America/Toronto)
+
+- User reported Developer Mode enabled; reused the existing signed MyNotes.app without rebuilding or regenerating the project.
+- `xcrun devicectl device install app --device DEVICE APP_PATH --timeout 60 --json-output LOCAL_RESULT`: exit 0, stdout reports `App installed:`, stderr empty.
+- `xcrun devicectl device info apps --device DEVICE --bundle-id BUNDLE_ID --timeout 30 --json-output LOCAL_RESULT`: exit 0; the installed-app result contains MyNotes; stderr empty.
+- `xcrun devicectl device process launch --device DEVICE BUNDLE_ID --timeout 60 --json-output LOCAL_RESULT`: exit 1, CoreDeviceError 10002, nested FBSOpenApplicationErrorDomain error 3 / Security. The device says the code signature, entitlements, or explicit user trust may be responsible; this is not a successful launch or a proven single root cause.
+- Local follow-up checks: `codesign --verify --deep --strict APP_PATH` exit 0; embedded provisioning profile is unexpired and includes the target iPad; application-identifier and team-identifier match between app entitlements and profile. These checks do not establish on-device trust or exhaust all entitlement checks.
+- Next: user inspects their own developer account in Settings → General → VPN & Device Management; confirms trust only for their intended signing account if prompted. If no trust entry appears, obtain the exact alert shown by opening MyNotes. Retry launch after user confirmation; no trust safeguards are bypassed.
+- Raw logs remain local because they contain signing and device identifiers. Repository documentation records only sanitized results.
+- Still not run: successful app launch, Pencil behavior, page switching/persistence, PDF, backups. Issue #1 remains open.
+
+## M0 successful-launch follow-up (2026-10-13, America/Toronto)
+
+- User reported the developer signing account trusted. Reused the installed app; no reinstallation or rebuild.
+- `xcrun devicectl device process launch --device DEVICE BUNDLE_ID --timeout 60 --json-output LOCAL_RESULT`: exit 0; stdout reports the application launched, stderr empty.
+- `xcrun devicectl device info processes --device DEVICE --timeout 30 --json-output LOCAL_RESULT`: exit 0; returned the same MyNotes executable and process identifier as the launch result. The check occurred after launch, not merely from a saved build output.
+- App installation, launch and process existence are now observed successes. No claim of long-term crash freedom, visible UI correctness or handwriting/persistence acceptance is made.
+- User was asked “iPad 上现在是否显示 MyNotes 的笔记列表或新建笔记界面？” and replied “已看到界面”. This is user-reported visual confirmation, not an assistant screenshot inspection. M0 startup acceptance is satisfied; M1 and later functionality remain untested.
+- Previous Developer Mode and trust failures are retained above as historical evidence, not current blockers. PR #7 remains open for review; no merge performed.
+
 ## Manual test matrix
 
 - **T01:** Create note → draw 20 strokes → change color/width → draw more → verify variation.
@@ -65,6 +87,8 @@ For every test: record **date, actor, device, OS, Xcode version, command/action,
 
 | Date | Actor | Test | Device / tool | Result | Details |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-13 | Codex | M0 launch after user trust / process query | Same iPad; already installed app | Pass (process only) | Launch/query exit 0 and same process observed; user confirmed visible UI; Pencil/persistence pending |
+| 2026-10-13 | Codex | M0 physical iPad install / launch | Same paired iPad; existing signed app | Install pass; launch blocked | Install/query exit 0; launch exit 1 Security; local signature/profile checks passed |
 | 2026-10-13 | Codex | M0 signed device build / install | Xcode 26.6; iPad inventory reports 26.6.2 | Build pass; install blocked | First build 65 (disk full), retry 0, codesign 0; install 1 (Developer Mode disabled); launch not run |
 | 2026-10-13 | Codex | M0 project generation + unsigned Simulator build | macOS 26.5 / Xcode 26.6 / XcodeGen 2.45.4 | Pass (build only) | Both scripts exit 0; signing and device/runtime checks pending |
 | 2026-10-13 | ChatGPT | Xcode & iPad tests | Unavailable in this runtime | Not run | Must be executed on owner's Mac |

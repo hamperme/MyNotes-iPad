@@ -2,7 +2,7 @@
 
 自用的原生 iPad 手写笔记 App，目标是以 SwiftUI + PencilKit + PDFKit 实现 Notability 常用功能，但不复制商标、专有素材或代码。**仓库默认建议设为 Private，不上架 App Store。**
 
-> **当前状态（2026-10-13）**：已准备可本地生成 Xcode 工程的源码骨架（单页书写、工具切换、模板、多页追加、文件保存）。**已通过无签名 Simulator 构建及使用用户本地签名配置的真机版本构建；iPad 安装因未开启开发者模式受阻，功能尚未验收**。PDF 批注、笔记分类等仍未实现。请先阅读 [PROGRESS.md](PROGRESS.md) 和 [handoff.md](handoff.md)。
+> **当前状态（2026-10-13）**：已准备可本地生成 Xcode 工程的源码骨架（单页书写、工具切换、模板、多页追加、文件保存）。**已通过 Simulator 和签名真机版本构建，并在 iPad 安装、启动成功；设备进程查询确认运行，用户已确认看到笔记界面；手写/保存功能尚待验收**。PDF 批注、笔记分类等仍未实现。请先阅读 [PROGRESS.md](PROGRESS.md) 和 [handoff.md](handoff.md)。
 
 ## 功能范围（MVP）
 
