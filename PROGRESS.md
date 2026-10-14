@@ -1,6 +1,6 @@
 # Project Progress / 项目进度
 
-> **Routing conflict discovered 2026-10-14:** remote `main` at `e5fd1d3` pauses this native prototype and redirects active work to `hamperme/maplehub-study`. This branch preserves the already implemented/installed native editor changes only. The owner explicitly replied “继续原生 iPad 版” in this chat after seeing that pivot. Continue this native branch; leave the PWA repository untouched, and resolve routing/document conflicts explicitly during PR review. This branch does not implement or supersede the PWA.
+> **Native workflow restored:** owner confirmed native development and remote main now agrees. Previous build/install evidence below remains valid for the connected owner iPad; it does not establish SideStore or recipient-device acceptance.
 Last reviewed: **2026-10-14**
 Overall: **M0 build/install/launch passed with user-confirmed visible UI; PR review pending; M1 handwriting/persistence acceptance next**
 Next milestone: **M1 — verify full-screen zoom, floating tools and dual erasers on iPad; remaining Pencil/persistence acceptance**
@@ -44,3 +44,12 @@ Next milestone: **M1 — verify full-screen zoom, floating tools and dual eraser
 - 每个已合并的 PR 更新这里的一行或一个简短记录；勿把纯计划标记为已完成。
 - GitHub Issues 负责细粒度状态，本文件只记录当前总体状态和可核实的证据。
 - 任何计划变更应先调整 `ROADMAP.md` 或 `docs/DECISIONS.md`，再调整进度。
+
+## Issue #10 / SideStore local trial (2026-10-14)
+
+- Owner chose the connected local iPad; remote target iPad unavailable.
+- PASS: isolated Release iphoneos build and unsigned IPA packaging for trial build 1 and 2; identity/version/arm64/iOS/iPad/no-signature checks; 8 offline validator tests.
+- PASS: fresh private existing-note backup; official-linked iloader 2.3.7 asset hash, codesign and notarization checks; USB iPad visible and selected.
+- NOT RUN: SideStore account-based installation, initial refresh, trial import, in-place update/data retention, seven-day expiry/refresh, pairing recovery and backup restoration. Owner login/device approvals pending; no secrets in Git.
+- No app source, original signing configuration, existing bundle ID or storage format was changed. Separate trial identity is deliberate isolation, not an upgrade of existing MyNotes.
+- See [trial procedure](docs/SIDESTORE_TRIAL.md); keep #10 open until device gates are observed.

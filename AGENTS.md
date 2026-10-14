@@ -1,23 +1,14 @@
-# Agent instructions (Codex / ChatGPT / other coding agents)
+# MyNotes native app — cross-agent rules
 
-The project is a private, native iPad handwriting app using SwiftUI, PencilKit and (future) PDFKit. **Read `handoff.md` first**; it is the canonical cross-agent transfer record. See `PROGRESS.md` for verified milestone state and `ROADMAP.md` for scope.
+**Canonical app repo:** https://github.com/hamperme/MyNotes-iPad. The owner cancelled PWA on 2026-10-14. Separate website https://maplehub.study stays a StudyHub, not the delivery target for the native app.
 
-## Non-negotiable rules
+READ FIRST: handoff.md → PROGRESS.md → docs/NATIVE_DEPLOYMENT_PLAN.md → ROADMAP.md → relevant code/Issues/PRs.
 
-1. Do not claim builds or tests passed without actual execution and exact evidence. If not on macOS, mark `not run (Xcode unavailable)`.
-2. Keep pen strokes editable: preserve original PDF files, and store per-page `PKDrawing` data separately from background/template/PDF.
-3. Preserve user data and backward compatibility. Storage schema updates require migration + recovery consideration. Never overwrite damaged indexes silently.
-4. No secrets, signing keys, personal PDFs, account identifiers, or user notes in Git.
-5. No external backend/analytics, dependencies, or broad refactors without a documented decision in `docs/DECISIONS.md`.
-6. Keep PRs small and single-purpose. For each PR, link an Issue, provide reproduction/verification steps, and update `handoff.md` + `PROGRESS.md`.
-7. Never mark incomplete work complete based only on file existence or AI-generated code. Focus on running on the user's actual iPad.
-
-## Standard workflow
-
-- **Start:** `git status`, pull latest, read `handoff.md` → `PROGRESS.md` → `ROADMAP.md` → relevant code, Issues, PRs.
-- **Implement:** create `feat/issue-N-short-description` or `fix/issue-N-short-description`, add acceptance checks, avoid overlapping agent work.
-- **Verify:** `./scripts/check.sh` on Mac, plus `docs/TEST_PLAN.md` physical-device checks as applicable.
-- **Review:** document specific risks, tests performed and tests not performed. Request human/second-agent review before merging significant storage/PDF changes.
-- **Handoff:** update `handoff.md` Snapshot and log + `PROGRESS.md`; write the next agent's first concrete command/task.
-
-In case of conflicting instructions, preserve user data and stop for review rather than automatically resolving conflicts destructively.
+1. Build SwiftUI + PencilKit + PDFKit **native standalone iPad application**. Do not implement PWA/React/Cloudflare as a replacement.
+2. Free Apple Personal Team is valid seven days, **not permanent**. SideStore is a third-party trial distribution target and requires local computer pairing with recipient's iPad first. Never claim fully remote, perpetual, zero-maintenance installation.
+3. Real Xcode, IPA packaging, SideStore, Apple Pencil/PencilKit input, backup tests must be marked NOT RUN until actually verified; cite commands and device versions in PR.
+4. Test third-party stylus under .pencilOnly and .anyInput on student's device. Goodnotes success alone does not prove PKCanvasView compatibility.
+5. Preserve original PDFs, distinct editable per-page PKDrawing, stable page IDs, restore-capable backups, and backward compatibility. No destructive changes to app Bundle ID or file format.
+6. Keep signing credentials, Apple Accounts, pairing files, private PDFs, school notes and certificates off GitHub and out of any distributed package.
+7. One Issue per branch, small PRs with review. Every change updates both handoff.md and PROGRESS.md with tests and risks.
+8. No paid Apple account/services or App Store release without owner's explicit approval.

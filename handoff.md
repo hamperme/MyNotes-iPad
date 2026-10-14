@@ -1,18 +1,27 @@
 # Agent Handoff / 跨助手交接（唯一当前交接入口）
 
-> **Routing conflict discovered 2026-10-14:** remote `main` at `e5fd1d3` pauses this native prototype and redirects active work to `hamperme/maplehub-study`. This branch preserves the already implemented/installed native editor changes only. The owner explicitly replied “继续原生 iPad 版” in this chat after seeing that pivot. Continue this native branch; leave the PWA repository untouched, and resolve routing/document conflicts explicitly during PR review. This branch does not implement or supersede the PWA.
+> **Native direction confirmed:** the owner chose “继续原生 iPad 版”; remote main has since restored this repository as canonical. Keep the PWA/StudyHub repository untouched. Preserve prior observed native evidence instead of inheriting main’s stale blanket “not built/not installed” statements.
 > 供 **Codex、Claude Code、ChatGPT 和人类开发者** 互相审查与接手。每次结束修改前务必更新本文件。若内容和仓库代码冲突，以当前代码/测试/Issue 为准，并先纠正此文件。
 
 ## Snapshot
 
 - **Updated:** 2026-10-14
-- **Last actor:** Codex (full-screen zoom, movable toolbar and two eraser modes)
+- **Last actor:** Codex (Issue #10 unsigned IPA and local SideStore trial preparation)
 - **Repository target:** [`hamperme/MyNotes-iPad`](https://github.com/hamperme/MyNotes-iPad) (private; remote created)
-- **Working branch:** `feat/issue-2-zoom-eraser-modes` (stacked on PR #8 at `e89f5c3be2ccf0493b69e09320e2691dba0c6984`)
-- **Active task:** Issue #2 / #3 — full-screen zoom, movable tools, dual erasers and bottom-right paging; physical verification after update
+- **Working branch:** `feat/issue-10-sidestore-ipa` (stacked on PR #9 at `7d03db7dbda03ea24996c2b036446f4cb4ad6154`)
+- **Active task:** [Issue #10](https://github.com/hamperme/MyNotes-iPad/issues/10) — packaging complete; connected-owner-iPad SideStore trial awaiting owner login and device steps. Target student iPad is absent.
 - **Issue / PR:** [M1 Issue #2](https://github.com/hamperme/MyNotes-iPad/issues/2), related [M2 Issue #3](https://github.com/hamperme/MyNotes-iPad/issues/3); [current feature PR #9](https://github.com/hamperme/MyNotes-iPad/pull/9) uses `feat/issue-2-zoom-eraser-modes`, stacked on [ink/portrait PR #8](https://github.com/hamperme/MyNotes-iPad/pull/8), which is stacked on [M0 PR #7](https://github.com/hamperme/MyNotes-iPad/pull/7).
 - **Actual verification:** User confirmed prior black ink/portrait repair. Current 6 unit + 2 UI regressions pass, including strict rendered-landscape/pinch checks after restarting the dedicated simulator; pristine baseline and restored source both reproduce the same 4 missing-feature failures. All 33 pristine source hashes restored by rollback. Simulator build, signed iphoneos build, signature verification, fresh local note backup, in-place iPad installation, launch and running-process query passed. Physical acceptance of new zoom/pan, both eraser behaviors and palette/paging remains pending; detailed commands/results in TEST_PLAN.
 - **Status summary:** M0 startup accepted, PR review pending; basic handwriting skeleton only, not a complete MVP
+
+## Current SideStore gate (2026-10-14)
+
+- Owner explicitly chose the currently USB-connected iPad for experiments; remote recipient device is not available. Use separate `MyNotes Trial` / `com.example.mynotes.sidestoretrial`, never overwrite the existing signed MyNotes or delete notes.
+- Unsigned arm64 device IPAs build 1 and 2 built on Xcode 26.6/XcodeGen 2.45.4. Eight offline validator tests pass. A first packaging run rejected its missing build number; setting `CURRENT_PROJECT_VERSION` fixed the observed error. Build-only success is not SideStore signing/install acceptance.
+- Official-guide-linked iloader 2.3.7 downloaded, GitHub asset SHA-256 matched, codesign and Gatekeeper notarization checks passed. UI opened and selected USB iPad; Save Credentials remains unchecked. Owner must personally sign in; no account password requested in chat or stored in the repo.
+- Existing notes backed up privately before trial; restoration is NOT verified. Stop for owner decision if SideStore/iloader asks to revoke certificates: that may affect the existing Xcode-signed app, even though trial has a different bundle ID.
+- Next: owner login, LocalDevVPN installation/approval on iPad, SideStore stable installation and first refresh; then import trial build 1, create disposable notes, update with build 2 and compare data. Do not substitute iloader/direct Xcode installation for evidence of SideStore IPA import. Record actual final bundle ID/team locally.
+- Actual SideStore installation, refresh, in-place data preservation, seven-day expiry/recovery, pairing recovery and student-device stylus checks: **NOT RUN**. See [SIDESTORE_TRIAL.md](docs/SIDESTORE_TRIAL.md).
 
 ## What exists now
 
@@ -41,7 +50,7 @@
 - Latest update installed and running on the user’s iPad; do not repeat Developer Mode/trust setup. Ask for physical gesture/eraser/layout feedback, then record it separately from automated results.
 - Review this stacked PR after PR #8; do not auto-merge or close the entire M1 issue. Keep raw logs, private note backup and signing identifiers out of Git.
 
-## First task for the next agent
+## Prior editor handoff (retained; current first action is SideStore gate above)
 
 1. Check `git status`, review `AGENTS.md`, `README.md`, `docs/ARCHITECTURE.md`, `docs/TEST_PLAN.md`.
 2. Mac generation/build have passed. Re-run `./scripts/check.sh` after source changes; do not replace the recorded successful build with an unverified claim.

@@ -19,3 +19,8 @@ MyNotes.xcodeproj/
 
 # Generated isolated regression project
 /tests/MyNotesRegression.xcodeproj/
+
+# Local signing/SideStore pairing and Python validation intermediates
+*.mobiledevicepairing
+*.pairing
+__pycache__/
