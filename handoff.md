@@ -1,68 +1,12 @@
-# Agent Handoff / 跨助手交接（唯一当前交接入口）
+# Handoff — native repository on hold
 
-> 供 **Codex、Claude Code、ChatGPT 和人类开发者** 互相审查与接手。每次结束修改前务必更新本文件。若内容和仓库代码冲突，以当前代码/测试/Issue 为准，并先纠正此文件。
+**Updated:** 2026-10-14
+**Actor:** ChatGPT (planning and routing; no code tests)
+**Status:** PAUSED — native iPad-only Xcode/PencilKit scaffold is no longer active development due to no Apple Developer membership and remote iPad-only installation constraints.
+**Active canonical web repo:** [hamperme/maplehub-study](https://github.com/hamperme/maplehub-study)
+**Current agent handoff:** [maplehub-study/handoff.md](https://github.com/hamperme/maplehub-study/blob/main/handoff.md)
+**Plan:** [docs/MAPLENOTES_PWA_PLAN.md](https://github.com/hamperme/maplehub-study/blob/main/docs/MAPLENOTES_PWA_PLAN.md)
+**Web app target:** https://maplehub.study/notes/
+**Active web task:** [P0 iPad Safari stylus feasibility, issue #1](https://github.com/hamperme/maplehub-study/issues/1)
 
-## Snapshot
-
-- **Updated:** 2026-10-13
-- **Last actor:** ChatGPT (initial project scaffold, not a verified build)
-- **Repository target:** [`hamperme/MyNotes-iPad`](https://github.com/hamperme/MyNotes-iPad) (private; remote created)
-- **Working branch:** `main` (GitHub remote baseline; earlier offline SHA differs)
-- **Active task:** M0 — first Mac Xcode compile and iPad installation
-- **Issue / PR:** [M0 Issue #1](https://github.com/hamperme/MyNotes-iPad/issues/1); M1–M5 Issues #2–#6; no PR yet
-- **Actual verification:** GitHub remote main contains all 30 expected tracked files (verified by recursive Git tree) and Issues #1–#6; local Swift syntax parse/YAML parse passed; **no macOS/Xcode/iPad runtime tests**
-- **Status summary:** basic handwriting editor skeleton only; do not claim MVP complete
-
-## What exists now
-
-- `project.yml`: XcodeGen specification for an iPad-only iOS 17+ app.
-- `MyNotes/App/MyNotesApp.swift`: SwiftUI entry point.
-- `MyNotes/Views/LibraryView.swift`: create and browse notes.
-- `MyNotes/Views/NoteEditorView.swift`: basic drawing tools, page picker, paper picker.
-- `MyNotes/Components/PencilCanvas.swift`: PKCanvasView with PencilKit tools.
-- `MyNotes/Components/PaperBackground.swift`: blank/ruled/grid/dotted display.
-- `MyNotes/Models/NoteRecord.swift` & `Services/NoteStore.swift`: editable PKDrawing per page + JSON note index.
-- `scripts/bootstrap.sh` and `scripts/check.sh`: generate/build project on Mac.
-- `ROADMAP.md`, `PROGRESS.md`, `docs/*`, GitHub collaboration templates.
-
-## First task for the next agent
-
-1. Check `git status`, review `AGENTS.md`, `README.md`, `docs/ARCHITECTURE.md`, `docs/TEST_PLAN.md`.
-2. On **Mac** run `./scripts/bootstrap.sh` and `./scripts/check.sh` (install XcodeGen if needed); record **exact** Xcode/iPadOS versions and compilation errors.
-3. Fix build errors in the smallest PR; do not silently add network/cloud dependencies.
-4. Set unique bundle ID and Apple Personal Team, install on real iPad; verify pencil/eraser/lasso, page switch, app restart persistence.
-5. Record outcomes in `docs/TEST_PLAN.md` (date, device, version, pass/fail) and update `PROGRESS.md` + this document.
-6. Work on [Issue #1](https://github.com/hamperme/MyNotes-iPad/issues/1) in a small branch; open PR, update these documents, get review.
-
-## Known gaps / risks
-
-- **No verified build:** Code is a draft. Simulator/build may reveal API or XcodeGen issues.
-- **Data durability:** no debounce, backup/restore, file recovery, atomic metadata transaction, or storage error UI. Avoid using for irreplaceable notes.
-- **Page editing:** add/switch exists; delete/reorder/zoom not implemented.
-- **Lasso:** PKLassoTool wired; moving/scaling selected strokes is not verified on a device.
-- **PDF:** import/render/overlay/export not implemented. Need a page-ID-to-PDF-page map and coordinate tests.
-- **Folders:** not implemented; metadata model will need migration strategy.
-- **Undo/redo:** not exposed in UI; plan proper undo ownership in PKCanvasView.
-- **Security:** no secrets, signing certificates or user PDFs should be committed.
-
-## Transfer protocol (required for every agent)
-
-Before coding:
-- Pull `main`, inspect open PR/Issues and the last commit.
-- State the issue ID and exact scope in a branch/PR; do not edit unrelated areas.
-- Mark blocked items honestly; do not assume another agent's report is verified.
-
-Before handoff:
-- Summarize **change / reason / files / validation commands with results**.
-- Write explicit **untested** items; never invent test outcomes.
-- Document migration impacts, decisions, open questions, and next actionable step.
-- Update `PROGRESS.md`, this file, and relevant Issue/PR **in the same change set**.
-- When finished, change `Last actor`, `Active task`, `Working branch`, and `Issue / PR` above.
-
-## Handoff log (newest on top)
-
-| Date | Actor | Work | Verification | Next |
-| --- | --- | --- | --- | --- |
-| 2026-10-13 | ChatGPT | Published all 30 source, config, and documentation files to private GitHub main; verified remote tree and Issues #1–#6 | Remote tree count + file fetch, local Swift parse/YAML pass; Xcode/iPad NOT RUN | Issue #1: build on Mac and validate on iPad |
-| 2026-10-13 | ChatGPT | Created GitHub repo and issues #1–#6; published initial docs | GitHub writes confirmed; no Xcode build | Mac build for #1 |
-| 2026-10-13 | ChatGPT | Initial local source scaffold and collaboration docs | Swift syntax parse + YAML checks + local Git commit; Xcode not available | Mac build, device test, push remote |
+Any Codex, Claude or ChatGPT agent landing here should STOP before implementing native issues, open the active web repo, read AGENTS.md → handoff.md → plan and recent Issues/PRs, then work on one PWA Issue. This repo is retained for comparison/history only. Do not claim a PWA exists, nor that a real device test was run.
