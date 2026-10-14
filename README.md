@@ -1,3 +1,5 @@
+> **PROJECT PIVOT (2026-10-14): This Swift/iPadOS prototype is paused, retained for reference only.** The active no-signing iPad PWA project, Issues, PRs and cross-AI handoff are now in [hamperme/maplehub-study](https://github.com/hamperme/maplehub-study), with [migration plan](https://github.com/hamperme/maplehub-study/blob/main/docs/MAPLENOTES_PWA_PLAN.md) and [active handoff](https://github.com/hamperme/maplehub-study/blob/main/handoff.md). Do not develop two separate deployed web copies. No working PWA or real iPad test has been completed yet.
+
 # MyNotes-iPad
 
 自用的原生 iPad 手写笔记 App，目标是以 SwiftUI + PencilKit + PDFKit 实现 Notability 常用功能，但不复制商标、专有素材或代码。**仓库默认建议设为 Private，不上架 App Store。**
