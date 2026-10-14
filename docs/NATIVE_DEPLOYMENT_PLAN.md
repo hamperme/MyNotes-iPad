@@ -43,7 +43,7 @@ Apple's official free Personal Team provisioning profiles expire after **7 days*
 | N3 | [#4](https://github.com/hamperme/MyNotes-iPad/issues/4) | Folders/library | Notebook metadata and folder migration pass |
 | N4 | [#5](https://github.com/hamperme/MyNotes-iPad/issues/5) | PDF import + annotation + export | 50-page PDF, edits on 2/15/40 remain aligned |
 | N5 | [#6](https://github.com/hamperme/MyNotes-iPad/issues/6) | Durable save, undo/redo, backup/restore | Export and restore using Files tested on iPad |
-| D0 | [#7](https://github.com/hamperme/MyNotes-iPad/issues/7) | Build/install/refresh via SideStore (or another no-subscription route) | Real installed icon, reopen, in-place IPA update, 7-day refresh, pairing-recovery documented |
+| D0 | [#7](https://github.com/hamperme/MyNotes-iPad/issues/10) | Build/install/refresh via SideStore (or another no-subscription route) | Real installed icon, reopen, in-place IPA update, 7-day refresh, pairing-recovery documented |
 
 D0 hardware feasibility should be evaluated EARLY (in parallel with N0), before large engineering investment. D0 final regression depends on installable app + persistence validation. Target first native proof: working handwriting view compiled on Mac -> temporary remote install -> student third-party Pencil test.
 
