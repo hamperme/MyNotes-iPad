@@ -5,7 +5,7 @@
 READ FIRST: handoff.md → PROGRESS.md → docs/NATIVE_DEPLOYMENT_PLAN.md → ROADMAP.md → relevant code/Issues/PRs.
 
 1. Build SwiftUI + PencilKit + PDFKit **native standalone iPad application**. Do not implement PWA/React/Cloudflare as a replacement.
-2. Free Apple Personal Team is valid seven days, **not permanent**. SideStore is a third-party trial distribution target and requires local computer pairing with recipient's iPad first. Never claim fully remote, perpetual, zero-maintenance installation.
+2. Free Apple Personal Team is valid seven days, **not permanent**. SideStore is a third-party trial distribution target and requires local computer pairing with recipient's iPad first. The student **owns a Windows PC** (no Mac) and can perform USB/iloader setup locally; no actual pairing has been verified. Never claim fully remote, perpetual, zero-maintenance installation.
 3. Real Xcode, IPA packaging, SideStore, Apple Pencil/PencilKit input, backup tests must be marked NOT RUN until actually verified; cite commands and device versions in PR.
 4. Test third-party stylus under .pencilOnly and .anyInput on student's device. Goodnotes success alone does not prove PKCanvasView compatibility.
 5. Preserve original PDFs, distinct editable per-page PKDrawing, stable page IDs, restore-capable backups, and backward compatibility. No destructive changes to app Bundle ID or file format.
