@@ -2,7 +2,7 @@
 
 **Active 2026-10-14:** SwiftUI + PencilKit + PDFKit. Owner cancelled PWA; keep learning website separate. See [native deployment plan](docs/NATIVE_DEPLOYMENT_PLAN.md).
 
-**Core requirement:** Independently installed native iPad app, no Apple Developer Program membership, student's only device iPad, own Mac remote, third-party stylus. SideStore is a **conditional** delivery option, not a no-expiry certificate; initial local computer pairing and weekly signing refresh still matter.
+**Core requirement:** Independently installed native iPad app, no Apple Developer Program membership, student has Windows PC + iPad but no Mac; developer has Mac, third-party stylus. SideStore is a **conditional** delivery option, not a no-expiry certificate; initial local computer pairing and weekly signing refresh still matter.
 
 ## Early go/no-go gates
 
@@ -10,7 +10,7 @@
 - [ ] [#10](https://github.com/hamperme/MyNotes-iPad/issues/10): verify a re-signable IPA, physically initialize SideStore on student iPad, launch and refresh in place from the iPad.
 - [ ] [#2](https://github.com/hamperme/MyNotes-iPad/issues/2): the student's actual third-party stylus works in PencilKit with acceptable palm rejection; test .pencilOnly vs .anyInput.
 
-If recipient cannot temporarily pair iPad with any computer, **pause SideStore delivery** and report the blocker rather than promising OTA installation.
+Student **has his own Windows PC**, so first pairing is operationally possible if supported. Check 64-bit Windows architecture, USB/drivers, iPadOS and SideStore setup; this has NOT been executed. Document any incompatibility rather than promising a successful install.
 
 ## Functional milestones
 
