@@ -12,17 +12,19 @@
 | N3 Folders/library | [#4](https://github.com/hamperme/MyNotes-iPad/issues/4) | Not done |
 | N4 PDF import/overlay/export | [#5](https://github.com/hamperme/MyNotes-iPad/issues/5) | Not done |
 | N5 Undo, durable saving, backup/restore | [#6](https://github.com/hamperme/MyNotes-iPad/issues/6) | Not done |
-| D0 Fee-free remote install/refresh | [#10](https://github.com/hamperme/MyNotes-iPad/issues/10) | Not tested; initial physical computer pairing needed |
+| D0 Fee-free remote install/refresh | [#10](https://github.com/hamperme/MyNotes-iPad/issues/10) | Not tested; student has Windows PC for initial USB pairing (compatibility not yet confirmed) |
 
 ## Blocking risks
 
 1. Apple free Personal Team provisioning expires every seven days. SideStore is an external tool, potentially subject to auto-refresh failure or pairing loss; it has not been installed or tested.
-2. Student is remote and has **only an iPad**. First-time SideStore pairing needs a computer physically connected to his iPad; remote Mac alone cannot perform the pairing.
+2. Student is remote and has **Windows PC + iPad** (confirmed by owner 2026-10-14). First-time SideStore pairing can be done on his Windows PC via USB/iloader, subject to supported Windows architecture, drivers and iPadOS verification; **actual pairing NOT TESTED**.
 3. Need reproducible Mac Xcode build and re-signable IPA generation without paid program.
 4. Third-party stylus works in Goodnotes/Notability per user report but PencilKit may classify it differently.
 5. Must have actual backup/restore before student depends on notebooks for school.
 
 ## Recent history
+
+- **2026-10-14** Owner clarified recipient owns a Windows PC (no Mac). Updated SideStore feasibility plan to use his own Windows for USB pairing; verified current SideStore Windows/iloader documentation; **no pairing or app installation performed**.
 
 - **2026-10-14** Owner cancelled PWA; restored original native repo as canonical app project and reopened native Issues #1–#6; created SideStore feasibility Issue #10. Documented limitations; **no app build/device test done**.
 - **2026-10-14** Prior PWA plan (maplehub-study) was documentation only, no code shipped; now superseded.
