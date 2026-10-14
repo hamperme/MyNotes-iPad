@@ -11,9 +11,9 @@
 ## Recipient logistics
 
 - Developer: Mac available.
-- Student: in Mississauga, **iPad only**, third-party Pencil works in Goodnotes/Notability according to user.
+- Student: in Mississauga, has **Windows PC + iPad**, no Mac; third-party Pencil works in Goodnotes/Notability according to user. Windows platform details and iPadOS version are not yet checked.
 - No paid Apple Developer Program and no public App Store listing.
-- **A computer physically paired to the student's iPad is necessary for first SideStore setup**; may be needed later if pairing file fails. Do not claim zero-touch remote install.
+- **Student can do first SideStore USB pairing locally on his own Windows PC** with iloader, Apple device drivers and a data cable; repeat there if pairing file expires. Check Windows architecture/iPadOS and never claim pairing is already tested.
 - SideStore uses 7-day signing refreshed on-device; auto-refresh cannot be guaranteed. Apple free Personal Team expires after 7 days.
 
 ## Next agent's first task
@@ -21,7 +21,7 @@
 1. Pull current main, read [docs/NATIVE_DEPLOYMENT_PLAN.md](docs/NATIVE_DEPLOYMENT_PLAN.md), PROGRESS.md, AGENTS.md, ROADMAP.md, relevant source and open PRs.
 2. Run on **actual Mac**: `./scripts/bootstrap.sh`, `./scripts/check.sh`. Fix build issues under #1; report exact Xcode version and commands.
 3. Identify and test IPA export/build path without paid Apple Developer Program. Do **not** claim archive/export works without actual test.
-4. Prepare SideStore installation/refresh test instructions and realistic requirements under #10. Arrange first pairing with a temporary trusted computer physically accessible to student's iPad; if impossible, mark BLOCKED rather than invent an OTA-only path.
+4. Prepare SideStore installation/refresh test instructions and realistic requirements under #10. Use student's **own Windows PC**, USB, iTunes/Apple Devices, iloader, LocalDevVPN to verify first pairing per SideStore official prerequisites; never request credentials or pairing files. Mark NOT RUN until actual success.
 5. Then test `PKCanvasView` with third-party Pencil using both `.pencilOnly` and `.anyInput`, recording palm rejection and lasso.
 6. Maintain a strict 'not for irreplaceable class notes' warning until backup/restore is proven.
 
@@ -41,5 +41,6 @@ Current project includes editable PKDrawing, paper templates, page switch/create
 
 | Date | Actor | Work | Verified | Next |
 |---|---|---|---|---|
+| 2026-10-14 | ChatGPT | Corrected recipient setup: Windows PC available for SideStore pairing; verified official Windows/iloader guide | GitHub docs/Issue only, no physical setup or Xcode test | Verify Windows compatibility; perform #10 pairing/IPA trial |
 | 2026-10-14 | ChatGPT | Reinstated native plan, revived native Issues and added SideStore feasibility task | GitHub docs/Issues only; NO Xcode/device test | Issue #1 build; #10 SideStore feasibility and physical pairing plan |
 | 2026-10-14 | ChatGPT | Earlier PWA plan created in maplehub-study (now superseded) | No PWA code built | Native-first per latest owner request |
