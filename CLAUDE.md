@@ -1,7 +1,7 @@
-> **PROJECT PIVOT (2026-10-14): This Swift/iPadOS prototype is paused, retained for reference only.** The active no-signing iPad PWA project, Issues, PRs and cross-AI handoff are now in [hamperme/maplehub-study](https://github.com/hamperme/maplehub-study), with [migration plan](https://github.com/hamperme/maplehub-study/blob/main/docs/MAPLENOTES_PWA_PLAN.md) and [active handoff](https://github.com/hamperme/maplehub-study/blob/main/handoff.md). Do not develop two separate deployed web copies. No working PWA or real iPad test has been completed yet.
+# Claude Code — MyNotes native app
 
-# Claude Code entrypoint
+This is the active SwiftUI/PencilKit/PDFKit app repository; do NOT redirect to the PWA project. Read [AGENTS.md](AGENTS.md), [handoff.md](handoff.md), [PROGRESS.md](PROGRESS.md), and [docs/NATIVE_DEPLOYMENT_PLAN.md](docs/NATIVE_DEPLOYMENT_PLAN.md) before work.
 
-Follow [`AGENTS.md`](AGENTS.md) for mandatory engineering rules and [`handoff.md`](handoff.md) for the current work state. `handoff.md` is the **single canonical handoff file**—do not create a divergent Claude-only progress record.
+Active first tasks: [Issue #1 build on Mac](https://github.com/hamperme/MyNotes-iPad/issues/1) and [Issue #10 free IPA/SideStore delivery](https://github.com/hamperme/MyNotes-iPad/issues/10). SideStore still uses 7-day free signing, and first setup requires a computer physically connected to recipient iPad. Do not claim a permanent free signature.
 
-At the beginning of each session, summarize the current issue and the evidence from the latest handoff. Before finishing, update `handoff.md` / `PROGRESS.md` in the same change set and distinguish actual tests from unverified assumptions.
+Each PR: link Issue, record exact command/device results and NOT RUN items, preserve data, update handoff.md / PROGRESS.md. Never commit accounts/pairing files/user PDFs.
