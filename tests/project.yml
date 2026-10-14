@@ -19,10 +19,21 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
   MyNotesTests:
     type: bundle.unit-test
     platform: iOS
     sources: [EditorRegressionTests.swift]
+    dependencies:
+      - target: MyNotes
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+  MyNotesUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [EditorUITests.swift]
     dependencies:
       - target: MyNotes
     settings:
@@ -34,5 +45,6 @@ schemes:
       targets:
         MyNotes: all
         MyNotesTests: [test]
+        MyNotesUITests: [test]
     test:
-      targets: [MyNotesTests]
+      targets: [MyNotesTests, MyNotesUITests]

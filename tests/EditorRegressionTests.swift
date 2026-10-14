@@ -80,8 +80,6 @@ final class EditorRegressionTests: XCTestCase {
             XCTAssertEqual(logical.width / logical.height, 210.0 / 297.0, accuracy: 0.001)
             XCTAssertEqual(logical.width, original.width, accuracy: 0.01)
             XCTAssertEqual(logical.height, original.height, accuracy: 0.01)
-            XCTAssertLessThanOrEqual(visible.maxX, size.width + 1)
-            XCTAssertLessThanOrEqual(visible.maxY, size.height + 1)
             XCTAssertFalse(canvas.isScrollEnabled)
             XCTAssertEqual(canvas.minimumZoomScale, canvas.maximumZoomScale)
         }
@@ -107,5 +105,105 @@ final class EditorRegressionTests: XCTestCase {
         XCTAssertEqual(canvas.drawing.strokes.count, 1)
         XCTAssertEqual(canvas.drawing.bounds, drawing.bounds)
         XCTAssertEqual(store.drawing(noteID: id, pageID: pageID).dataRepresentation(), before)
+    }
+
+    private func segmentedControls(in view: UIView) -> [UISegmentedControl] {
+        (view as? UISegmentedControl).map { [$0] } ?? view.subviews.flatMap { segmentedControls(in: $0) }
+    }
+
+    private func select(_ index: Int, in control: UISegmentedControl) async throws {
+        control.selectedSegmentIndex = index
+        control.sendActions(for: .valueChanged)
+        try await Task.sleep(for: .milliseconds(200))
+    }
+
+    func testEraserOffersWholeStrokeAndPartialModes() async throws {
+        defer { closeHost() }
+        let store = NoteStore()
+        let id = try XCTUnwrap(store.createNote())
+        let canvas = try await show(NoteEditorView(noteID: id, store: store))
+        let tools = try XCTUnwrap(segmentedControls(in: host.view).first { $0.titleForSegment(at: 0) == "画笔" })
+        try await select(1, in: tools)
+        XCTAssertEqual((canvas.tool as? PKEraserTool)?.eraserType, .vector)
+        let modes = segmentedControls(in: host.view).first { $0.titleForSegment(at: 0) == "整笔擦除" }
+        print("ERASER partialSelectorPresent=\(modes != nil) default=\(String(describing: (canvas.tool as? PKEraserTool)?.eraserType))")
+        let picker = try XCTUnwrap(modes, "Eraser must offer whole-stroke and partial modes")
+        XCTAssertEqual(picker.numberOfSegments, 2)
+        XCTAssertEqual(picker.titleForSegment(at: 1), "局部擦除")
+        try await select(1, in: picker)
+        XCTAssertEqual((canvas.tool as? PKEraserTool)?.eraserType, .bitmap)
+        print("ERASER partial=\(String(describing: (canvas.tool as? PKEraserTool)?.eraserType))")
+        try await select(0, in: tools)
+        XCTAssertTrue(canvas.tool is PKInkingTool)
+        try await select(1, in: tools)
+        XCTAssertEqual((canvas.tool as? PKEraserTool)?.eraserType, .bitmap, "Keep eraser mode across tool switches")
+        let restoredPicker = try XCTUnwrap(segmentedControls(in: host.view).first { $0.titleForSegment(at: 0) == "整笔擦除" })
+        try await select(0, in: restoredPicker)
+        XCTAssertEqual((canvas.tool as? PKEraserTool)?.eraserType, .vector)
+        XCTAssertEqual(canvas.drawingPolicy, .pencilOnly)
+        print("ERASER switchedBack=vector pencilOnly=true")
+    }
+
+    func testPageZoomKeepsInkCoordinatesAndSurvivesResize() async throws {
+        defer { closeHost() }
+        let store = NoteStore()
+        let id = try XCTUnwrap(store.createNote())
+        let pageID = try XCTUnwrap(store.note(id: id)?.pages.first?.id)
+        let points = [CGPoint(x: 50, y: 100), CGPoint(x: 300, y: 400)].enumerated().map { i, p in
+            PKStrokePoint(location: p, timeOffset: Double(i) * 0.1, size: CGSize(width: 4, height: 4), opacity: 1, force: 1, azimuth: 0, altitude: .pi / 2)
+        }
+        let drawing = PKDrawing(strokes: [PKStroke(ink: PKInk(.pen, color: .black), path: PKStrokePath(controlPoints: points, creationDate: Date()))])
+        store.saveDrawing(drawing, noteID: id, pageID: pageID)
+        let before = store.drawing(noteID: id, pageID: pageID).dataRepresentation()
+        let canvas = try await show(NoteEditorView(noteID: id, store: store))
+        var ancestor = canvas.superview
+        var outer: UIScrollView?
+        while let view = ancestor {
+            if let scroll = view as? UIScrollView { outer = scroll; break }
+            ancestor = view.superview
+        }
+        print("ZOOM outerScrollPresent=\(outer != nil)")
+        let scroll = try XCTUnwrap(outer, "The whole paper needs a zoomable viewport")
+        let hit = host.view.hitTest(CGPoint(x: host.view.bounds.midX, y: host.view.bounds.midY), with: nil)
+        print("ZOOM hitTest=\(String(describing: hit)) inViewport=\(hit?.isDescendant(of: scroll) == true)")
+        XCTAssertTrue(hit?.isDescendant(of: scroll) == true, "Blank paper must receive touches, not its overlays")
+        XCTAssertTrue(scroll.isScrollEnabled)
+        XCTAssertTrue(scroll.gestureRecognizers?.contains { $0 is UIPinchGestureRecognizer && $0.isEnabled } == true)
+        XCTAssertEqual(scroll.panGestureRecognizer.minimumNumberOfTouches, 2)
+        XCTAssertGreaterThanOrEqual(scroll.maximumZoomScale / scroll.minimumZoomScale, 4)
+        let original = canvas.bounds
+        let fit = scroll.minimumZoomScale
+        let initial = canvas.convert(canvas.bounds, to: scroll)
+        XCTAssertGreaterThanOrEqual(initial.width, scroll.bounds.width - 1)
+        XCTAssertGreaterThanOrEqual(initial.height, scroll.bounds.height - 1)
+        scroll.setZoomScale(fit, animated: false)
+        let visible = canvas.convert(canvas.bounds, to: host.view).size
+        scroll.setZoomScale(fit * 2, animated: false)
+        try await Task.sleep(for: .milliseconds(150))
+        XCTAssertEqual(canvas.convert(canvas.bounds, to: host.view).width, visible.width * 2, accuracy: 1)
+        XCTAssertEqual(canvas.bounds, original)
+        let tools = try XCTUnwrap(segmentedControls(in: host.view).first { $0.titleForSegment(at: 0) == "画笔" })
+        try await select(1, in: tools)
+        XCTAssertEqual(scroll.zoomScale / scroll.minimumZoomScale, 2, accuracy: 0.01, "Tool changes must not reset zoom")
+        for size in [CGSize(width: 800, height: 1200), CGSize(width: 600, height: 900)] {
+            host.view.frame = CGRect(origin: .zero, size: size)
+            host.view.setNeedsLayout()
+            host.view.layoutIfNeeded()
+            try await Task.sleep(for: .milliseconds(200))
+            print("ZOOM viewport=\(size) relative=\(scroll.zoomScale / scroll.minimumZoomScale) logical=\(canvas.bounds.size)")
+            XCTAssertEqual(scroll.zoomScale / scroll.minimumZoomScale, 2, accuracy: 0.01)
+            XCTAssertEqual(canvas.bounds, original)
+        }
+        scroll.setZoomScale(scroll.minimumZoomScale, animated: false)
+        try await Task.sleep(for: .milliseconds(150))
+        let fitted = canvas.convert(canvas.bounds, to: scroll)
+        let viewport = scroll.bounds
+        XCTAssertGreaterThanOrEqual(fitted.minX, viewport.minX - 1)
+        XCTAssertGreaterThanOrEqual(fitted.minY, viewport.minY - 1)
+        XCTAssertLessThanOrEqual(fitted.maxX, viewport.maxX + 1)
+        XCTAssertLessThanOrEqual(fitted.maxY, viewport.maxY + 1)
+        XCTAssertEqual(canvas.drawing.dataRepresentation(), before)
+        XCTAssertEqual(store.drawing(noteID: id, pageID: pageID).dataRepresentation(), before)
+        print("ZOOM fittedAgain=true drawingBytesUnchanged=true")
     }
 }

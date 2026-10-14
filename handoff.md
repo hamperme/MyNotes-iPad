@@ -1,16 +1,17 @@
 # Agent Handoff / 跨助手交接（唯一当前交接入口）
 
+> **Routing conflict discovered 2026-10-14:** remote `main` at `e5fd1d3` pauses this native prototype and redirects active work to `hamperme/maplehub-study`. This branch preserves the already implemented/installed native editor changes only. The owner explicitly replied “继续原生 iPad 版” in this chat after seeing that pivot. Continue this native branch; leave the PWA repository untouched, and resolve routing/document conflicts explicitly during PR review. This branch does not implement or supersede the PWA.
 > 供 **Codex、Claude Code、ChatGPT 和人类开发者** 互相审查与接手。每次结束修改前务必更新本文件。若内容和仓库代码冲突，以当前代码/测试/Issue 为准，并先纠正此文件。
 
 ## Snapshot
 
-- **Updated:** 2026-10-13
-- **Last actor:** Codex (black-ink/Dark Mode and portrait-page repair; regression verification)
+- **Updated:** 2026-10-14
+- **Last actor:** Codex (full-screen zoom, movable toolbar and two eraser modes)
 - **Repository target:** [`hamperme/MyNotes-iPad`](https://github.com/hamperme/MyNotes-iPad) (private; remote created)
-- **Working branch:** `fix/issue-2-ink-and-portrait-page` (stacked on M0 PR #7 at `55174f839aacf97e07e73800692fcd642a0287fd`)
-- **Active task:** Issue #2 — black ink/portrait page correction; physical writing verification after installing fix
-- **Issue / PR:** [M1 Issue #2](https://github.com/hamperme/MyNotes-iPad/issues/2), related [M2 Issue #3](https://github.com/hamperme/MyNotes-iPad/issues/3); editor-fix PR on `fix/issue-2-ink-and-portrait-page`, stacked on [M0 PR #7](https://github.com/hamperme/MyNotes-iPad/pull/7).
-- **Actual verification:** On macOS 26.5 (25F71), Xcode 26.6 (17F113), XcodeGen 2.45.4: `./scripts/bootstrap.sh` exit 0; `./scripts/check.sh` exit 0 and `** BUILD SUCCEEDED **` (iOS Simulator SDK 26.5, unsigned). Signed iphoneos build succeeded with `-jobs 2 COMPILER_INDEX_STORE_ENABLE=NO`; `codesign --verify --deep --strict` exit 0. After user enabled Developer Mode, installation exit 0 and device app query confirms MyNotes. Initial launch was rejected by Security; after user confirmed trust, launch exit 0 and subsequent device process query exit 0 confirms the same MyNotes process is running. Local signature/profile checks passed. User explicitly replied “已看到界面” to the visible library/new-note screen question. **M0 acceptance passed; handwriting/persistence acceptance remains pending**
+- **Working branch:** `feat/issue-2-zoom-eraser-modes` (stacked on PR #8 at `e89f5c3be2ccf0493b69e09320e2691dba0c6984`)
+- **Active task:** Issue #2 / #3 — full-screen zoom, movable tools, dual erasers and bottom-right paging; physical verification after update
+- **Issue / PR:** [M1 Issue #2](https://github.com/hamperme/MyNotes-iPad/issues/2), related [M2 Issue #3](https://github.com/hamperme/MyNotes-iPad/issues/3); current feature PR uses `feat/issue-2-zoom-eraser-modes`, stacked on [ink/portrait PR #8](https://github.com/hamperme/MyNotes-iPad/pull/8), which is stacked on [M0 PR #7](https://github.com/hamperme/MyNotes-iPad/pull/7).
+- **Actual verification:** User confirmed prior black ink/portrait repair. Current 6 unit + 2 UI regressions pass, including strict rendered-landscape/pinch checks after restarting the dedicated simulator; pristine baseline and restored source both reproduce the same 4 missing-feature failures. All 33 pristine source hashes restored by rollback. Simulator build, signed iphoneos build, signature verification, fresh local note backup, in-place iPad installation, launch and running-process query passed. Physical acceptance of new zoom/pan, both eraser behaviors and palette/paging remains pending; detailed commands/results in TEST_PLAN.
 - **Status summary:** M0 startup accepted, PR review pending; basic handwriting skeleton only, not a complete MVP
 
 ## What exists now
@@ -25,12 +26,20 @@
 - `scripts/bootstrap.sh` and `scripts/check.sh`: generate/build project on Mac.
 - `ROADMAP.md`, `PROGRESS.md`, `docs/*`, GitHub collaboration templates.
 
-## Current editor repair
+## Previous editor repair (PR #8; user confirmed)
 
 - User reproduced black ink appearing white and landscape-shaped paper. Baseline hosted iPad Simulator tests reproduced both: dark canvas style=2 maps black to RGB 1,1,1; a 1200×800 host yields a 1200×661 canvas.
 - Changed `PencilCanvas.makeUIView/updateUIView` to force light paper/opaque literal ink and disable independent scrolling. `NoteEditorView.body/loadPage` now fits fixed portrait paper without rewriting legacy stroke coordinates.
-- Regression harness uses a separate bundle ID and dedicated simulator; baseline and rollback reproduce 14 failing assertions, modified passes all 4 tests. Signed build, in-place install, launch and running-process query passed; user physical writing confirmation remains pending. Local note backup completed before update. No personal data is committed; original signed checkout and M0 branch stay unchanged.
+- Regression harness uses a separate bundle ID and dedicated simulator; baseline and rollback reproduce 14 failing assertions, modified passes all 4 tests. Signed build, in-place install, launch and running-process query passed; user subsequently confirmed black ink and portrait layout both normal. Local note backup completed before update. No personal data is committed; original signed checkout and M0 branch stay unchanged.
 - Review PR #7 first; repair branch is stacked so its PR should target the M0 branch until that is merged. Do not auto-merge or mark whole M1 complete.
+
+## Current full-screen editor update
+
+- Source baseline is PR #8. User explicitly confirmed black ink/portrait paper, then requested zoom, dual erasers, full-screen paper, movable edge-adaptive palette and bottom-right paging/add. The new branch addresses this scope only.
+- Native outer scroll view transforms paper and ink together; fixed logical coordinates and storage remain unchanged. Inner canvas navigation is disabled. Eraser mode maps to vector/bitmap. Floating tools and paging are overlays; no fixed navigation bar consumes page space.
+- Tests include actual XCUITest pinch, palette drag to both sides, mode selection, page add/previous/next, rotation and back navigation, in addition to hosted ink/coordinate/legacy-data regressions. See TEST_PLAN for final observed outcomes; physical Pencil erase/persistence acceptance is separate.
+- Latest update installed and running on the user’s iPad; do not repeat Developer Mode/trust setup. Ask for physical gesture/eraser/layout feedback, then record it separately from automated results.
+- Review this stacked PR after PR #8; do not auto-merge or close the entire M1 issue. Keep raw logs, private note backup and signing identifiers out of Git.
 
 ## First task for the next agent
 
@@ -39,14 +48,14 @@
 3. User has configured signing locally. Preserve the existing generated project; do NOT rerun bootstrap over it. Keep account identifiers, certificates, bundle identity and generated signing configuration out of Git.
 4. Installation and launch have now succeeded; do not rebuild/reinstall or repeat trust setup unnecessarily. The user confirmed the notebook/new-note screen is visible. Review PR #7, then take M1 Issue #2 for physical Pencil and restart-persistence checks separately. Do not treat startup acceptance as proof of working handwriting.
 5. Record outcomes in `docs/TEST_PLAN.md` (date, device, version, pass/fail) and update `PROGRESS.md` + this document.
-6. Review M0 PR #7 and this separate editor repair branch for Issue #2. Verify black and colored strokes, rotate iPad, switch pages and reopen the app; record user observations separately from automated tests.
+6. Review M0 PR #7 and this separate editor repair branch for Issue #2. Black ink and portrait shape are already user-confirmed. Verify the new two-finger zoom/pan, both eraser modes, floating toolbar placement, bottom-right paging and reopen persistence; record user observations separately from automated tests.
 
 ## Known gaps / risks
 
-- **Runtime unverified:** Simulator and signed device builds passed; actual iPad installation, launch and running-process query passed. Visible UI was confirmed by the user; Apple Pencil and persistence tests remain pending. Simulator launch was not tested. Build warnings include missing AppIntents metadata and interface-orientation support.
-- **Low disk space:** First device build failed with `No space left on device` (exit 65); retry using `-jobs 2 COMPILER_INDEX_STORE_ENABLE=NO` passed. No user files/caches were deleted. Free space was approximately 1.2 GiB after the successful retry; avoid unnecessary full rebuilds.
+- **Runtime scope:** Simulator UI launch/gestures/layout and signed device install/launch passed. User confirmed prior black/portrait fixes. New physical Pencil erasing, pan/zoom, lasso and persistence still need acceptance.
+- **Build resources:** Historical device build failed with `No space left on device`; subsequent builds passed after space became available. No user files/caches were deleted. Keep resource-conscious builds; avoid treating that old failure as a current blocker.
 - **Data durability:** no debounce, backup/restore, file recovery, atomic metadata transaction, or storage error UI. Avoid using for irreplaceable notes.
-- **Page editing:** add/switch exists; delete/reorder/zoom not implemented.
+- **Page editing:** add/switch exists; delete/reorder not implemented; zoom added in this branch, physical acceptance pending.
 - **Lasso:** PKLassoTool wired; moving/scaling selected strokes is not verified on a device.
 - **PDF:** import/render/overlay/export not implemented. Need a page-ID-to-PDF-page map and coordinate tests.
 - **Folders:** not implemented; metadata model will need migration strategy.
@@ -71,6 +80,7 @@ Before handoff:
 
 | Date | Actor | Work | Verification | Next |
 | --- | --- | --- | --- | --- |
+| 2026-10-14 | Codex | Full-screen paper, explicit pinch zoom, vector/bitmap erasers, movable adaptive tools and bottom-right paging | 8 regressions pass; baseline/rollback 4 missing-feature failures; signed update backed up/installed/launched | User verifies physical gestures/erasers/layout; review stacked feature PR |
 | 2026-10-13 | Codex | Fix literal ink on white paper and portrait sheet layout; add isolated regressions | Baseline/rollback reproduce defects; modified 4 tests pass; signed update installed/launched | User verifies black ink, portrait page and rotation; review stacked fix PR; M1 remains partial |
 | 2026-10-13 | Codex | Launched installed MyNotes after user confirmed developer trust; checked running process | Launch exit 0; device process query exit 0 confirms same app process | User confirmed visible UI; review PR #7, then M1 physical Pencil/persistence tests |
 | 2026-10-13 | Codex | Installed MyNotes on the iPad; queried installed app; attempted launch | Install/query 0; launch 1 Security. Local signature/profile checks passed; device trust not confirmed | User checks developer trust; retry launch, keep #1 open |

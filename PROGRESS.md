@@ -1,13 +1,14 @@
 # Project Progress / 项目进度
 
-Last reviewed: **2026-10-13**  
+> **Routing conflict discovered 2026-10-14:** remote `main` at `e5fd1d3` pauses this native prototype and redirects active work to `hamperme/maplehub-study`. This branch preserves the already implemented/installed native editor changes only. The owner explicitly replied “继续原生 iPad 版” in this chat after seeing that pivot. Continue this native branch; leave the PWA repository untouched, and resolve routing/document conflicts explicitly during PR review. This branch does not implement or supersede the PWA.
+Last reviewed: **2026-10-14**
 Overall: **M0 build/install/launch passed with user-confirmed visible UI; PR review pending; M1 handwriting/persistence acceptance next**
-Next milestone: **M1 — verify black ink and portrait paper fix on physical iPad; remaining Pencil/persistence acceptance**
+Next milestone: **M1 — verify full-screen zoom, floating tools and dual erasers on iPad; remaining Pencil/persistence acceptance**
 
 | 阶段 | 状态 | 当前完成内容 | 完成标准 |
 | --- | --- | --- | --- |
 | M0 工程启动 | 🟢 验收通过，待 PR 审查 | 构建、签名、iPad 安装/启动及进程检查通过；用户确认看到界面 | Mac Xcode 构建成功、iPad 安装启动 |
-| M1 PencilKit 手写 | 🟡 代码草稿 | 画笔、橡皮擦、基础套索、颜色/笔粗、本地保存 | Pencil 真机顺滑使用，重启不丢数据 |
+| M1 PencilKit 手写 | 🟡 部分实现与回归验证 | 画笔、双模式橡皮擦、颜色/笔粗、双指缩放、本地保存；新功能真机验收待确认 | Pencil 真机顺滑使用，重启不丢数据 |
 | M2 多页与模板 | 🟡 部分实现 | 可新增/切换页面及四种模板 | 页面删除/排序、模板位置与笔迹对齐可靠 |
 | M3 笔记管理 | ⚪ 未开始 | 仅简单笔记列表/新建 | 文件夹、重命名、删除与恢复策略 |
 | M4 PDF 批注 | ⚪ 未开始 | 已选 PDFKit + PencilKit 方案 | 导入、多页坐标正确、批注可编辑、PDF 导出 |
@@ -22,7 +23,9 @@ Next milestone: **M1 — verify black ink and portrait paper fix on physical iPa
 
 ## 最近变更
 
-- **2026-10-13 — 墨色/纸张修复（#2，涉及 #3）**：用户报告选黑写白、页面横向铺满。修复将白纸画布固定浅色，颜色不透明；纸张采用固定纵向 210:297 比例，整页等比适配屏幕，旧笔迹不重涂/删除。新增隔离 Simulator 回归；真机手写体验待用户确认，不能据此勾选整个 M1。
+- **2026-10-14 — 全屏编辑与手势/橡皮擦（#2，涉及 #3）**：用户已确认黑色笔迹、纵向纸张均正常。继续加入整页双指缩放/移动、整笔与局部擦除、可拖动且左右竖排的悬浮工具栏；翻页与加页合并到右下角。底层笔迹坐标与存储格式不变；8 项自动回归通过，基线与回滚均复现 4 项缺失功能；构建/签名/备份/原位更新/启动通过。验证结果见 TEST_PLAN，新的真机体验待用户确认。
+
+- **2026-10-13 — 墨色/纸张修复（#2，涉及 #3）**：用户报告选黑写白、页面横向铺满。修复将白纸画布固定浅色，颜色不透明；纸张采用固定纵向 210:297 比例，整页等比适配屏幕，旧笔迹不重涂/删除。新增隔离 Simulator 回归；用户随后回复“两项都正常”；这仅确认黑色和纵向纸张，不能据此勾选整个 M1。
 
 - **2026-10-13 — M0 真机启动成功（Issue #1 / PR #7）**：用户确认开发者签名已信任后，复用已安装 App 启动退出 0；后续进程查询退出 0，返回同一 MyNotes 进程。安装、启动、存活检查均有实际命令结果；用户随后回复“已看到界面”，完成 M0 可见界面确认；手写/保存功能未验收。
 

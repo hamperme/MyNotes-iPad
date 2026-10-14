@@ -35,3 +35,15 @@ New blank paper uses a fixed 595 × 841.5 logical coordinate space (210:297 port
 Legacy viewport-sized drawings are not transformed or re-encoded for layout. On page load, expand the logical portrait sheet to contain existing positive-coordinate ink bounds plus a margin, then fit it uniformly. No storage schema change or automatic migration; test covers a 1,100-point-wide legacy stroke retaining original bytes. Negative-coordinate legacy ink is not migrated. Revisit a versioned page-size model before adding persistent zoom/crop/page-size options.
 
 Reference: Apple’s [Introducing PencilKit](https://developer.apple.com/videos/play/wwdc2019/221/) explains dark-appearance ink conversion and opting out with `overrideUserInterfaceStyle`; verified here with the platform color conversion API and actual canvas traits.
+
+## 2026-10-13 — Full-screen paper viewport and movable tools (Issues #2 / #3)
+
+The user confirmed the preceding black-ink and portrait fixes, then requested pinch zoom, whole-stroke/partial erasing, full-screen paper, movable edge-adaptive tools, and bottom-right page/add controls. This supersedes the previous fit-only, fixed-chrome layout; it is not PDF import/export.
+
+Keep logical portrait coordinates and the existing drawing storage unchanged. A native outer UIScrollView pans and scales the complete paper+ink hosting view; disable the inner PKCanvasView scroll/pinch gestures so they cannot compete. Actual XCUITest pinches were recognized but did not advance the outer native zoom scale, even with canvas hit testing disabled in a diagnostic copy. The final viewport therefore uses its own public UIPinchGestureRecognizer to set the native zoom scale and preserve the pinch focal point; it does not modify or enumerate private PencilKit subviews. Default to filling the viewport without stretching; excess paper is reachable by two-finger panning. Minimum zoom fits the entire page. Settings offer explicit fit/fill actions. Retain relative user zoom and visible center on rotation; a new page starts at the selected fit/fill mode. Finger input navigates, Apple Pencil still writes.
+
+The floating palette is moved by its dedicated handle, not by dragging tool buttons. It becomes vertical within 90 points of either side (also in narrow windows), otherwise horizontal; clamp it within the current viewport on rotation. Put previous/page menu/next/add in one bottom-right overlay. No edge docking persistence, storage migration, new dependencies or backend is introduced.
+
+Use PKEraserTool(.vector) for whole strokes and .bitmap for local erasing. This does not mean clearing every stroke on the page. Remember the selected eraser mode during pen/eraser switching. Declare all four iPad interface orientations explicitly in generated project settings and the isolated test project. Preserve user signing in existing local generated projects; apply orientation keys without regenerating those projects.
+
+API references: Apple [UIScrollView](https://developer.apple.com/documentation/uikit/uiscrollview) and [PKCanvasView](https://developer.apple.com/documentation/pencilkit/pkcanvasview).

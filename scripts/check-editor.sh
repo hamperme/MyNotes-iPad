@@ -5,6 +5,9 @@ if [ "$#" -ne 1 ]; then
   exit 64
 fi
 root="$(cd "$(dirname "$0")/.." && pwd)"
+# Show the dedicated simulator so gesture/rotation failures can be inspected.
+open -a Simulator --args -CurrentDeviceUDID "$1"
+xcrun simctl bootstatus "$1" -b
 build="$(mktemp -d "${TMPDIR:-/tmp}/mynotes-editor-test.XXXXXX")"
 printf 'Regression build and results: %s\n' "$build"
 # A distinct test bundle/simulator protects personal notes and signing settings.
