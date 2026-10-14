@@ -1,3 +1,5 @@
+> **PROJECT PIVOT (2026-10-14): This Swift/iPadOS prototype is paused, retained for reference only.** The active no-signing iPad PWA project, Issues, PRs and cross-AI handoff are now in [hamperme/maplehub-study](https://github.com/hamperme/maplehub-study), with [migration plan](https://github.com/hamperme/maplehub-study/blob/main/docs/MAPLENOTES_PWA_PLAN.md) and [active handoff](https://github.com/hamperme/maplehub-study/blob/main/handoff.md). Do not develop two separate deployed web copies. No working PWA or real iPad test has been completed yet.
+
 # Agent instructions (Codex / ChatGPT / other coding agents)
 
 The project is a private, native iPad handwriting app using SwiftUI, PencilKit and (future) PDFKit. **Read `handoff.md` first**; it is the canonical cross-agent transfer record. See `PROGRESS.md` for verified milestone state and `ROADMAP.md` for scope.
