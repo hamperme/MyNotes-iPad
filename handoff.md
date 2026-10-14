@@ -16,6 +16,8 @@
 
 ## Current SideStore gate (2026-10-14)
 
+- **Current PR:** [#11 unsigned IPA packaging and SideStore trial](https://github.com/hamperme/MyNotes-iPad/pull/11), stacked on #9; open for review, do not merge automatically.
+
 - Owner explicitly chose the currently USB-connected iPad for experiments; remote recipient device is not available. Use separate `MyNotes Trial` / `com.example.mynotes.sidestoretrial`, never overwrite the existing signed MyNotes or delete notes.
 - Unsigned arm64 device IPAs build 1 and 2 built on Xcode 26.6/XcodeGen 2.45.4. Eight offline validator tests pass. A first packaging run rejected its missing build number; setting `CURRENT_PROJECT_VERSION` fixed the observed error. Build-only success is not SideStore signing/install acceptance.
 - Official-guide-linked iloader 2.3.7 downloaded, GitHub asset SHA-256 matched, codesign and Gatekeeper notarization checks passed. UI opened and selected USB iPad; Save Credentials remains unchecked. Owner must personally sign in; no account password requested in chat or stored in the repo.
