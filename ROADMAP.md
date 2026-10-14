@@ -1,54 +1,30 @@
-> **PROJECT PIVOT (2026-10-14): This Swift/iPadOS prototype is paused, retained for reference only.** The active no-signing iPad PWA project, Issues, PRs and cross-AI handoff are now in [hamperme/maplehub-study](https://github.com/hamperme/maplehub-study), with [migration plan](https://github.com/hamperme/maplehub-study/blob/main/docs/MAPLENOTES_PWA_PLAN.md) and [active handoff](https://github.com/hamperme/maplehub-study/blob/main/handoff.md). Do not develop two separate deployed web copies. No working PWA or real iPad test has been completed yet.
+# Native iPad App — Roadmap
 
-# Roadmap and acceptance criteria
+**Active 2026-10-14:** SwiftUI + PencilKit + PDFKit. Owner cancelled PWA; keep learning website separate. See [native deployment plan](docs/NATIVE_DEPLOYMENT_PLAN.md).
 
-Scope: native **iPad-only**, offline-first, personal-use Notability-inspired app. No App Store listing, collaboration, recording, AI recognition or cloud sync in MVP.
+**Core requirement:** Independently installed native iPad app, no Apple Developer Program membership, student's only device iPad, own Mac remote, third-party stylus. SideStore is a **conditional** delivery option, not a no-expiry certificate; initial local computer pairing and weekly signing refresh still matter.
 
-**Milestone sequence:** M0 → M1 → M2 → M3 → M4 → M5. Estimated effort is planning guidance, not a delivery commitment.
+## Early go/no-go gates
 
-## M0 — Build & device bootstrap (first issue)
-- [ ] Generate `.xcodeproj` using `./scripts/bootstrap.sh`.
-- [ ] `./scripts/check.sh` succeeds on Mac.
-- [ ] App installs via Xcode Personal Team on target iPad.
-- [ ] Log Xcode version, iPad model, iPadOS and results in test plan.
+- [ ] [#1](https://github.com/hamperme/MyNotes-iPad/issues/1): run XcodeGen bootstrap/check and build native project on developer's Mac.
+- [ ] [#10](https://github.com/hamperme/MyNotes-iPad/issues/10): verify a re-signable IPA, physically initialize SideStore on student iPad, launch and refresh in place from the iPad.
+- [ ] [#2](https://github.com/hamperme/MyNotes-iPad/issues/2): the student's actual third-party stylus works in PencilKit with acceptable palm rejection; test .pencilOnly vs .anyInput.
 
-## M1 — PencilKit (Apple Pencil, eraser, colors, widths, lasso)
-- [ ] Pencil drawing with smooth latency; finger does not accidentally ink.
-- [ ] Pen color/width persist during tool switches.
-- [ ] Eraser works; clarify pixel vs vector mode in UI.
-- [ ] Basic lasso select + move works on real iPad; determine whether selection scaling is available or needs custom implementation.
-- [ ] Close/reopen App and confirm editable strokes remain.
+If recipient cannot temporarily pair iPad with any computer, **pause SideStore delivery** and report the blocker rather than promising OTA installation.
 
-## M2 — Pages & templates
-- [ ] Four styles: blank/ruled/grid/dotted.
-- [ ] Add, delete, reorder, navigate pages with separate ink files.
-- [ ] Switching paper style never destroys/editably flattens ink.
-- [ ] A 20-page document survives relaunch with page order and content correct.
+## Functional milestones
 
-## M3 — Note library & folders
-- [ ] Rename, delete (confirm), search and sort notes.
-- [ ] Create/rename/move folders; move notes between folders.
-- [ ] Thumbnails and updated timestamps refresh reliably.
-- [ ] Storage schema migration documented and tested.
+- [ ] [#2 PencilKit](https://github.com/hamperme/MyNotes-iPad/issues/2): pen colour/width, eraser, lasso selection/move/scale (device proof), undo and restart persistence.
+- [ ] [#3 Pages and templates](https://github.com/hamperme/MyNotes-iPad/issues/3): ruled/grid/dotted/blank; add, delete, reorder, stable page IDs; 20-page smoke.
+- [ ] [#4 Library and folders](https://github.com/hamperme/MyNotes-iPad/issues/4): rename, delete safely, notebooks and subject folders, versioned storage migration.
+- [ ] [#5 PDF import and markup](https://github.com/hamperme/MyNotes-iPad/issues/5): original preserved, editable page overlays, coordinate-aware zoom and 50-page test.
+- [ ] [#6 Durability and backup](https://github.com/hamperme/MyNotes-iPad/issues/6): explicit failure UI, undo/redo, Files/iCloud Drive export + restore, version upgrade regression.
 
-## M4 — PDF import & editable annotation
-- [ ] Import from Files via security-scoped file URL; copy into app-managed storage.
-- [ ] Render multi-page PDF with PDFKit.
-- [ ] Overlay independently persisted PKDrawing per PDF page (stable identifier).
-- [ ] Verify correct ink location when zooming, switching pages and rotating iPad.
-- [ ] Export annotated PDF, preserving original PDF and editable source ink.
-- [ ] Test 50-page file with edits on widely separated pages.
+## Release acceptance
 
-## M5 — Stability, undo, backups and release-ready personal build
-- [ ] Undo/redo per page; test switching pages during editing.
-- [ ] Debounced/background saves with explicit error reporting and recovery.
-- [ ] Backup and restore format verified; avoid accidental data loss when reinstalling.
-- [ ] Test large documents and stress scenarios; review memory/performance.
-- [ ] Document direct Xcode installation, provisioning expiration, and iPad setup.
-
-## Issue decomposition when GitHub repo is created
-
-Create one issue per milestone first; split implementation further (e.g., PDF import, PDF overlay, PDF export) as work starts. All issues require:
-- **Acceptance criteria** with a user-visible behavior.
-- **Test evidence** (command, device, expected/actual).
-- **Definition of done:** implementation + tests + docs + `handoff.md`/`PROGRESS.md` update.
+- Actual build & install proved, not just source parse.
+- Student installs a dedicated Home Screen icon and uses their third-party pen on their own iPad.
+- SideStore refreshed in-device; missed refresh and pairing loss documented. Free signature **never assumed permanent**.
+- Note export and restore tested, and data survives at least one in-place app update.
+- No private data uploaded to GitHub, learning website, or release assets.
+- Each PR updates handoff.md / PROGRESS.md with real test logs and next steps.
