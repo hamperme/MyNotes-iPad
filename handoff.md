@@ -5,12 +5,12 @@
 ## Snapshot
 
 - **Updated:** 2026-10-13
-- **Last actor:** ChatGPT (initial project scaffold, not a verified build)
+- **Last actor:** Codex (first verified Mac project generation and unsigned Simulator build)
 - **Repository target:** [`hamperme/MyNotes-iPad`](https://github.com/hamperme/MyNotes-iPad) (private; remote created)
-- **Working branch:** `main` (GitHub remote baseline; earlier offline SHA differs)
-- **Active task:** M0 — first Mac Xcode compile and iPad installation
-- **Issue / PR:** [M0 Issue #1](https://github.com/hamperme/MyNotes-iPad/issues/1); M1–M5 Issues #2–#6; no PR yet
-- **Actual verification:** GitHub remote main contains all 30 expected tracked files (verified by recursive Git tree) and Issues #1–#6; local Swift syntax parse/YAML parse passed; **no macOS/Xcode/iPad runtime tests**
+- **Working branch:** `feat/issue-1-mac-build-evidence` (based on remote `main` at `25dffffc634d4005922abb0fe53490dec508e9a7`)
+- **Active task:** M0 — user signing setup, physical iPad installation and launch
+- **Issue / PR:** [M0 Issue #1](https://github.com/hamperme/MyNotes-iPad/issues/1); M1–M5 Issues #2–#6; build-evidence PR on `feat/issue-1-mac-build-evidence`
+- **Actual verification:** On macOS 26.5 (25F71), Xcode 26.6 (17F113), XcodeGen 2.45.4: `./scripts/bootstrap.sh` exit 0; `./scripts/check.sh` exit 0 and `** BUILD SUCCEEDED **` (iOS Simulator SDK 26.5, unsigned). **No simulator launch, iPad installation or runtime tests**
 - **Status summary:** basic handwriting editor skeleton only; do not claim MVP complete
 
 ## What exists now
@@ -28,15 +28,15 @@
 ## First task for the next agent
 
 1. Check `git status`, review `AGENTS.md`, `README.md`, `docs/ARCHITECTURE.md`, `docs/TEST_PLAN.md`.
-2. On **Mac** run `./scripts/bootstrap.sh` and `./scripts/check.sh` (install XcodeGen if needed); record **exact** Xcode/iPadOS versions and compilation errors.
-3. Fix build errors in the smallest PR; do not silently add network/cloud dependencies.
+2. Mac generation/build have passed. Re-run `./scripts/check.sh` after source changes; do not replace the recorded successful build with an unverified claim.
+3. User must select their Apple Personal Team and a unique bundle ID in the generated Xcode project. Keep account identifiers, certificates and generated signing configuration out of Git. Re-running bootstrap may overwrite local generated-project signing settings.
 4. Set unique bundle ID and Apple Personal Team, install on real iPad; verify pencil/eraser/lasso, page switch, app restart persistence.
 5. Record outcomes in `docs/TEST_PLAN.md` (date, device, version, pass/fail) and update `PROGRESS.md` + this document.
 6. Work on [Issue #1](https://github.com/hamperme/MyNotes-iPad/issues/1) in a small branch; open PR, update these documents, get review.
 
 ## Known gaps / risks
 
-- **No verified build:** Code is a draft. Simulator/build may reveal API or XcodeGen issues.
+- **Runtime unverified:** Unsigned Simulator build passed; simulator launch, device signing/install, Apple Pencil and persistence tests are still pending. One build warning: `Metadata extraction skipped. No AppIntents.framework dependency found.`
 - **Data durability:** no debounce, backup/restore, file recovery, atomic metadata transaction, or storage error UI. Avoid using for irreplaceable notes.
 - **Page editing:** add/switch exists; delete/reorder/zoom not implemented.
 - **Lasso:** PKLassoTool wired; moving/scaling selected strokes is not verified on a device.
@@ -63,6 +63,7 @@ Before handoff:
 
 | Date | Actor | Work | Verification | Next |
 | --- | --- | --- | --- | --- |
+| 2026-10-13 | Codex | Verified M0 generation and unsigned Simulator compilation; documentation-only evidence update; no app source or storage changes | Both scripts exited 0 on Xcode 26.6 / macOS 26.5; iPad install and runtime NOT RUN | User selects signing Team/bundle ID, then install and launch on iPad; keep #1 open |
 | 2026-10-13 | ChatGPT | Published all 30 source, config, and documentation files to private GitHub main; verified remote tree and Issues #1–#6 | Remote tree count + file fetch, local Swift parse/YAML pass; Xcode/iPad NOT RUN | Issue #1: build on Mac and validate on iPad |
 | 2026-10-13 | ChatGPT | Created GitHub repo and issues #1–#6; published initial docs | GitHub writes confirmed; no Xcode build | Mac build for #1 |
 | 2026-10-13 | ChatGPT | Initial local source scaffold and collaboration docs | Swift syntax parse + YAML checks + local Git commit; Xcode not available | Mac build, device test, push remote |

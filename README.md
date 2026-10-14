@@ -2,7 +2,7 @@
 
 自用的原生 iPad 手写笔记 App，目标是以 SwiftUI + PencilKit + PDFKit 实现 Notability 常用功能，但不复制商标、专有素材或代码。**仓库默认建议设为 Private，不上架 App Store。**
 
-> **当前状态（2026-10-13）**：已准备可本地生成 Xcode 工程的源码骨架（单页书写、工具切换、模板、多页追加、文件保存）。**尚未在 Mac / 真机编译或验证**；PDF 批注、笔记分类等仍未实现。请先阅读 [PROGRESS.md](PROGRESS.md) 和 [handoff.md](handoff.md)。
+> **当前状态（2026-10-13）**：已准备可本地生成 Xcode 工程的源码骨架（单页书写、工具切换、模板、多页追加、文件保存）。**已在 macOS 26.5 / Xcode 26.6 生成工程并通过无签名 Simulator 构建；尚未安装到真机或验收功能**。PDF 批注、笔记分类等仍未实现。请先阅读 [PROGRESS.md](PROGRESS.md) 和 [handoff.md](handoff.md)。
 
 ## 功能范围（MVP）
 
@@ -22,7 +22,7 @@
 3. 在仓库根目录运行 `./scripts/bootstrap.sh`，生成 `MyNotes.xcodeproj`。
 4. 在 Xcode 打开项目，进入目标 **MyNotes → Signing & Capabilities**：勾选 **Automatically manage signing**，选择你的 Personal Team，并把 `PRODUCT_BUNDLE_IDENTIFIER` 调整为唯一值，例如 `com.yourname.mynotes`。
 5. 连接 iPad，启用开发者模式，选择 iPad 为运行目标，按 `⌘R` 安装。免费 Personal Team 签名通常需要每 7 天重新签名。
-6. 可在 Mac 上运行 `./scripts/check.sh` 尝试无签名 Simulator 构建。当前代码未经 Xcode 构建验证，失败时请建立 Issue 并记录报错。
+6. 可在 Mac 上运行 `./scripts/check.sh` 执行无签名 Simulator 构建。2026-10-13 已在 Xcode 26.6（17F113）/ iOS Simulator SDK 26.5 构建通过；这不代表模拟器启动、真机安装或手写功能已验收。失败时请建立 Issue 并记录报错。
 
 > 启动工程不包含已生成的 `.xcodeproj`；这是有意设计，避免多人使用不同 Xcode 版本时出现工程文件冲突。
 
