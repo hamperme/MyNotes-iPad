@@ -5,12 +5,12 @@
 ## Snapshot
 
 - **Updated:** 2026-10-13
-- **Last actor:** Codex (first verified Mac project generation and unsigned Simulator build)
+- **Last actor:** Codex (signed device build verified; install attempted and blocked by Developer Mode)
 - **Repository target:** [`hamperme/MyNotes-iPad`](https://github.com/hamperme/MyNotes-iPad) (private; remote created)
 - **Working branch:** `feat/issue-1-mac-build-evidence` (based on remote `main` at `25dffffc634d4005922abb0fe53490dec508e9a7`)
-- **Active task:** M0 — user signing setup, physical iPad installation and launch
-- **Issue / PR:** [M0 Issue #1](https://github.com/hamperme/MyNotes-iPad/issues/1); M1–M5 Issues #2–#6; build-evidence PR on `feat/issue-1-mac-build-evidence`
-- **Actual verification:** On macOS 26.5 (25F71), Xcode 26.6 (17F113), XcodeGen 2.45.4: `./scripts/bootstrap.sh` exit 0; `./scripts/check.sh` exit 0 and `** BUILD SUCCEEDED **` (iOS Simulator SDK 26.5, unsigned). **No simulator launch, iPad installation or runtime tests**
+- **Active task:** M0 — user enables Developer Mode on iPad; retry installation and launch
+- **Issue / PR:** [M0 Issue #1](https://github.com/hamperme/MyNotes-iPad/issues/1); M1–M5 Issues #2–#6; [PR #7](https://github.com/hamperme/MyNotes-iPad/pull/7) on `feat/issue-1-mac-build-evidence`
+- **Actual verification:** On macOS 26.5 (25F71), Xcode 26.6 (17F113), XcodeGen 2.45.4: `./scripts/bootstrap.sh` exit 0; `./scripts/check.sh` exit 0 and `** BUILD SUCCEEDED **` (iOS Simulator SDK 26.5, unsigned). Signed iphoneos build succeeded with `-jobs 2 COMPILER_INDEX_STORE_ENABLE=NO`; `codesign --verify --deep --strict` exit 0. iPad installation attempted, exit 1: CoreDeviceError 10005 / Developer Mode disabled. **No successful installation or runtime acceptance**
 - **Status summary:** basic handwriting editor skeleton only; do not claim MVP complete
 
 ## What exists now
@@ -29,14 +29,15 @@
 
 1. Check `git status`, review `AGENTS.md`, `README.md`, `docs/ARCHITECTURE.md`, `docs/TEST_PLAN.md`.
 2. Mac generation/build have passed. Re-run `./scripts/check.sh` after source changes; do not replace the recorded successful build with an unverified claim.
-3. User must select their Apple Personal Team and a unique bundle ID in the generated Xcode project. Keep account identifiers, certificates and generated signing configuration out of Git. Re-running bootstrap may overwrite local generated-project signing settings.
-4. Set unique bundle ID and Apple Personal Team, install on real iPad; verify pencil/eraser/lasso, page switch, app restart persistence.
+3. User has configured signing locally. Preserve the existing generated project; do NOT rerun bootstrap over it. Keep account identifiers, certificates, bundle identity and generated signing configuration out of Git.
+4. User enables Developer Mode on iPad (Settings → Privacy & Security), restarts and confirms. Reuse the already built signed MyNotes.app, run `xcrun devicectl device install app --device DEVICE APP_PATH`, then `xcrun devicectl device process launch --device DEVICE BUNDLE_ID`. Resolve DEVICE / APP_PATH / BUNDLE_ID from local build and device records; never commit these private identifiers. Installation is not yet successful.
 5. Record outcomes in `docs/TEST_PLAN.md` (date, device, version, pass/fail) and update `PROGRESS.md` + this document.
 6. Work on [Issue #1](https://github.com/hamperme/MyNotes-iPad/issues/1) in a small branch; open PR, update these documents, get review.
 
 ## Known gaps / risks
 
-- **Runtime unverified:** Unsigned Simulator build passed; simulator launch, device signing/install, Apple Pencil and persistence tests are still pending. One build warning: `Metadata extraction skipped. No AppIntents.framework dependency found.`
+- **Runtime unverified:** Simulator and signed device builds passed; installation is blocked by disabled Developer Mode. Simulator launch, device launch, Apple Pencil and persistence tests are still pending. Build warnings include missing AppIntents metadata and interface-orientation support.
+- **Low disk space:** First device build failed with `No space left on device` (exit 65); retry using `-jobs 2 COMPILER_INDEX_STORE_ENABLE=NO` passed. No user files/caches were deleted. Free space was approximately 1.2 GiB after the successful retry; avoid unnecessary full rebuilds.
 - **Data durability:** no debounce, backup/restore, file recovery, atomic metadata transaction, or storage error UI. Avoid using for irreplaceable notes.
 - **Page editing:** add/switch exists; delete/reorder/zoom not implemented.
 - **Lasso:** PKLassoTool wired; moving/scaling selected strokes is not verified on a device.
@@ -63,6 +64,7 @@ Before handoff:
 
 | Date | Actor | Work | Verification | Next |
 | --- | --- | --- | --- | --- |
+| 2026-10-13 | Codex | Verified signed device build and code signature; attempted actual iPad install | Build retry 0, codesign 0, install 1: Developer Mode disabled; no launch | User enables Developer Mode; retry existing signed app installation, then launch |
 | 2026-10-13 | Codex | Verified M0 generation and unsigned Simulator compilation; documentation-only evidence update; no app source or storage changes | Both scripts exited 0 on Xcode 26.6 / macOS 26.5; iPad install and runtime NOT RUN | User selects signing Team/bundle ID, then install and launch on iPad; keep #1 open |
 | 2026-10-13 | ChatGPT | Published all 30 source, config, and documentation files to private GitHub main; verified remote tree and Issues #1–#6 | Remote tree count + file fetch, local Swift parse/YAML pass; Xcode/iPad NOT RUN | Issue #1: build on Mac and validate on iPad |
 | 2026-10-13 | ChatGPT | Created GitHub repo and issues #1–#6; published initial docs | GitHub writes confirmed; no Xcode build | Mac build for #1 |

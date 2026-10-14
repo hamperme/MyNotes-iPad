@@ -1,12 +1,12 @@
 # Project Progress / 项目进度
 
 Last reviewed: **2026-10-13**  
-Overall: **Mac project generation and unsigned Simulator build passed; device installation and runtime tests pending**
+Overall: **Simulator and signed device builds passed; iPad installation blocked by disabled Developer Mode**
 Next milestone: **M0 — compile and run on physical iPad**
 
 | 阶段 | 状态 | 当前完成内容 | 完成标准 |
 | --- | --- | --- | --- |
-| M0 工程启动 | 🟡 构建通过，待真机 | XcodeGen 工程生成及无签名 Simulator 构建成功 | Mac Xcode 构建成功、iPad 安装启动 |
+| M0 工程启动 | 🟡 构建通过，待真机 | 工程生成、Simulator 构建和本地签名真机版本构建成功 | Mac Xcode 构建成功、iPad 安装启动 |
 | M1 PencilKit 手写 | 🟡 代码草稿 | 画笔、橡皮擦、基础套索、颜色/笔粗、本地保存 | Pencil 真机顺滑使用，重启不丢数据 |
 | M2 多页与模板 | 🟡 部分实现 | 可新增/切换页面及四种模板 | 页面删除/排序、模板位置与笔迹对齐可靠 |
 | M3 笔记管理 | ⚪ 未开始 | 仅简单笔记列表/新建 | 文件夹、重命名、删除与恢复策略 |
@@ -15,12 +15,14 @@ Next milestone: **M0 — compile and run on physical iPad**
 
 ## 现在的主要阻塞项
 
-1. Mac 工程生成和无签名 Simulator 构建已通过；尚需用户配置 Personal Team 与唯一 Bundle ID，再完成 iPad 安装启动。
+1. 用户已在本地设置签名，真机版本构建和代码签名校验均通过。安装到 iPad 返回 CoreDeviceError 10005：Developer Mode is disabled；需用户在 iPad 开启开发者模式、重启并确认后重试安装。
 2. M0–M5 Issues #1–#6 保持未完成；Simulator 构建不等于运行或 Apple Pencil 功能验收。
 3. 保存失败目前仅写日志、没有用户可见提示；正式记笔记前必须补上。
 4. PDF 页面可编辑笔迹层的坐标与缩放策略还未落地。
 
 ## 最近变更
+
+- **2026-10-13 — M0 签名后续验收（Issue #1 / PR #7）**：保留用户生成工程内的本地配置，Simulator 复查退出 0。真机版本首次构建因 `No space left on device` 退出 65；降低并发并关闭本次索引写入后构建退出 0，`codesign --verify --deep --strict` 退出 0。实际安装退出 1，设备提示开发者模式未启用；尚未启动 App，不关闭 #1。
 
 - **2026-10-13 — M0 Mac 首次构建证据（Issue #1）**：在 macOS 26.5（25F71）、Xcode 26.6（17F113）、XcodeGen 2.45.4 上运行 `./scripts/bootstrap.sh` 与 `./scripts/check.sh`，均退出 0，后者输出 `** BUILD SUCCEEDED **`。使用 iOS Simulator SDK 26.5，未改应用代码或工程规格。仅完成构建；签名、iPad 安装启动及功能验收仍待完成。
 
