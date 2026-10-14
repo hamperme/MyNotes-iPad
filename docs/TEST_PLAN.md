@@ -64,6 +64,18 @@ For every test: record **date, actor, device, OS, Xcode version, command/action,
 - User was asked “iPad 上现在是否显示 MyNotes 的笔记列表或新建笔记界面？” and replied “已看到界面”. This is user-reported visual confirmation, not an assistant screenshot inspection. M0 startup acceptance is satisfied; M1 and later functionality remain untested.
 - Previous Developer Mode and trust failures are retained above as historical evidence, not current blockers. PR #7 remains open for review; no merge performed.
 
+## Editor ink and portrait regression (2026-10-13)
+
+- User reported black selected but white ink visible, and a landscape-shaped notebook instead of portrait paper. Baseline: commit `55174f839aacf97e07e73800692fcd642a0287fd` (M0 PR #7).
+- Same hosted iPad Simulator tests were run against baseline, modified copy and a separately restored rollback copy. Host cases: 1200×800, 800×1200 and 600×900; Dark Mode; black/custom color; synthetic legacy drawing reaching x=1100.
+- **BASELINE:** xcodebuild test exit 65; 4 tests / 14 assertions failed. Canvas style=2 (dark), PencilKit black conversion RGB=1,1,1. Landscape logical canvas 1200×661 (ratio 1.8154), with coordinates changing on resize.
+- **MODIFIED:** xcodebuild test exit 0; 4 tests, zero failures. Canvas style=1 (light), black RGB=0,0,0; custom color and width remain literal. New paper logical size 595×841.5 at every host size (210:297); templates/ink scale as one sheet. Legacy test drawing expands the sheet to 1127×1594 without changing its saved drawing bytes.
+- **ROLLBACK:** embedded rollback executed on a separate modified copy, exit 0, all 30 original tracked-file SHA-256 values restored. Same tests again exit 65 with the same 14 assertions and original black-to-white/landscape behavior. The patch reconstructs the modified copy; rollback is not an iPad downgrade command.
+- The delivered `scripts/check-editor.sh SIMULATOR_UUID` was executed after correcting its generated-project path: exit 0, 4 tests / zero failures. A separate generated test project allows reruns without touching the user's signed production project. Run on a dedicated simulator: tests create synthetic notes in the isolated regression bundle.
+- Signed device build, `codesign --verify --deep --strict`, in-place iPad installation, launch and subsequent process query all exit 0. Existing app bundle identifier retained; no uninstall performed. Existing notes were backed up locally before updating; private data/signing metadata are not committed.
+- Not yet confirmed by user on physical iPad: new black handwriting, portrait page appearance and rotation alignment. Broader M1 pen/eraser/lasso/relaunch-persistence acceptance remains open. PDF import/export and interactive page zoom remain unimplemented.
+- Test-harness setup errors (relative source path / explicit Swift self capture / generated test-source path) were observed and repaired in the test tooling; they are retained in the local literal evidence ledger, not attributed to application behavior.
+
 ## Manual test matrix
 
 - **T01:** Create note → draw 20 strokes → change color/width → draw more → verify variation.
@@ -87,6 +99,7 @@ For every test: record **date, actor, device, OS, Xcode version, command/action,
 
 | Date | Actor | Test | Device / tool | Result | Details |
 | --- | --- | --- | --- | --- | --- |
+| 2026-10-13 | Codex | Black ink / portrait page regression | Dedicated iPad Simulator, iOS 26.5 | Baseline+rollback fail as expected; modified pass | 4 tests; 14 → 0 → 14 assertions. Signed update installed/launched; physical writing confirmation pending |
 | 2026-10-13 | Codex | M0 launch after user trust / process query | Same iPad; already installed app | Pass (process only) | Launch/query exit 0 and same process observed; user confirmed visible UI; Pencil/persistence pending |
 | 2026-10-13 | Codex | M0 physical iPad install / launch | Same paired iPad; existing signed app | Install pass; launch blocked | Install/query exit 0; launch exit 1 Security; local signature/profile checks passed |
 | 2026-10-13 | Codex | M0 signed device build / install | Xcode 26.6; iPad inventory reports 26.6.2 | Build pass; install blocked | First build 65 (disk full), retry 0, codesign 0; install 1 (Developer Mode disabled); launch not run |

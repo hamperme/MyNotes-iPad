@@ -17,6 +17,11 @@ struct PencilCanvas: UIViewRepresentable {
 
     func makeUIView(context: Context) -> PKCanvasView {
         let canvas = PKCanvasView()
+        // White paper must not invert black ink when the app uses Dark Mode.
+        canvas.overrideUserInterfaceStyle = .light
+        canvas.isScrollEnabled = false
+        canvas.minimumZoomScale = 1
+        canvas.maximumZoomScale = 1
         canvas.backgroundColor = .clear
         canvas.isOpaque = false
         canvas.drawingPolicy = .pencilOnly
@@ -26,13 +31,14 @@ struct PencilCanvas: UIViewRepresentable {
     }
 
     func updateUIView(_ canvas: PKCanvasView, context: Context) {
+        canvas.overrideUserInterfaceStyle = .light
         context.coordinator.parent = self
         if canvas.drawing.dataRepresentation() != drawing.dataRepresentation() {
             canvas.drawing = drawing
         }
         switch tool {
         case .pen:
-            canvas.tool = PKInkingTool(.pen, color: color, width: width)
+            canvas.tool = PKInkingTool(.pen, color: color.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light)).withAlphaComponent(1), width: width)
         case .eraser:
             canvas.tool = PKEraserTool(.vector)
         case .lasso:

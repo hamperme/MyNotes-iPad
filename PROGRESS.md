@@ -2,7 +2,7 @@
 
 Last reviewed: **2026-10-13**  
 Overall: **M0 build/install/launch passed with user-confirmed visible UI; PR review pending; M1 handwriting/persistence acceptance next**
-Next milestone: **M1 — physical Apple Pencil and persistence acceptance (after M0 PR review)**
+Next milestone: **M1 — verify black ink and portrait paper fix on physical iPad; remaining Pencil/persistence acceptance**
 
 | 阶段 | 状态 | 当前完成内容 | 完成标准 |
 | --- | --- | --- | --- |
@@ -21,6 +21,8 @@ Next milestone: **M1 — physical Apple Pencil and persistence acceptance (after
 4. PDF 页面可编辑笔迹层的坐标与缩放策略还未落地。
 
 ## 最近变更
+
+- **2026-10-13 — 墨色/纸张修复（#2，涉及 #3）**：用户报告选黑写白、页面横向铺满。修复将白纸画布固定浅色，颜色不透明；纸张采用固定纵向 210:297 比例，整页等比适配屏幕，旧笔迹不重涂/删除。新增隔离 Simulator 回归；真机手写体验待用户确认，不能据此勾选整个 M1。
 
 - **2026-10-13 — M0 真机启动成功（Issue #1 / PR #7）**：用户确认开发者签名已信任后，复用已安装 App 启动退出 0；后续进程查询退出 0，返回同一 MyNotes 进程。安装、启动、存活检查均有实际命令结果；用户随后回复“已看到界面”，完成 M0 可见界面确认；手写/保存功能未验收。
 

@@ -10,6 +10,7 @@ struct NoteEditorView: View {
     @State private var tool: DrawingTool = .pen
     @State private var color: Color = .black
     @State private var width: Double = 4
+    @State private var paperSize = CGSize(width: 595, height: 595 * 297 / 210)
 
     init(noteID: UUID, store: NoteStore) {
         self.noteID = noteID
@@ -32,7 +33,7 @@ struct NoteEditorView: View {
                     .pickerStyle(.segmented)
                     .frame(maxWidth: 255)
 
-                    ColorPicker("颜色", selection: $color)
+                    ColorPicker("颜色", selection: $color, supportsOpacity: false)
                         .frame(maxWidth: 100)
                     Slider(value: $width, in: 1...20)
                         .frame(maxWidth: 140)
@@ -43,20 +44,36 @@ struct NoteEditorView: View {
 
                 Divider()
 
-                ZStack {
-                    PaperBackground(style: page.style)
-                    PencilCanvas(
-                        drawing: drawing,
-                        tool: tool,
-                        color: UIColor(color),
-                        width: CGFloat(width)
-                    ) { editedDrawing in
-                        drawing = editedDrawing
-                        store.saveDrawing(editedDrawing, noteID: noteID, pageID: pageID)
+                GeometryReader { geometry in
+                    let scale = max(0.01, min(
+                        (geometry.size.width - 32) / paperSize.width,
+                        (geometry.size.height - 32) / paperSize.height
+                    ))
+                    ZStack {
+                        Color(uiColor: .secondarySystemBackground)
+                        ZStack {
+                            PaperBackground(style: page.style)
+                            PencilCanvas(
+                                drawing: drawing,
+                                tool: tool,
+                                color: UIColor(color),
+                                width: CGFloat(width)
+                            ) { editedDrawing in
+                                drawing = editedDrawing
+                                store.saveDrawing(editedDrawing, noteID: noteID, pageID: pageID)
+                            }
+                            .id(pageID)
+                        }
+                        // Scale the complete page, not its drawing coordinates.
+                        .frame(width: paperSize.width, height: paperSize.height)
+                        .environment(\.colorScheme, .light)
+                        .clipped()
+                        .overlay(Rectangle().stroke(Color.black.opacity(0.12), lineWidth: 1))
+                        .shadow(color: .black.opacity(0.16), radius: 6, y: 2)
+                        .scaleEffect(scale)
+                        .frame(width: paperSize.width * scale, height: paperSize.height * scale)
                     }
-                    .id(pageID)
                 }
-                .clipped()
 
                 HStack {
                     Picker("页面", selection: $pageID) {
@@ -101,5 +118,11 @@ struct NoteEditorView: View {
 
     private func loadPage() {
         drawing = store.drawing(noteID: noteID, pageID: pageID)
+        // Legacy pages had viewport-sized coordinates. Expand the portrait sheet
+        // to contain their existing positive-coordinate ink, without rewriting it.
+        let bounds = drawing.bounds
+        let ratio: CGFloat = 210 / 297
+        let width = bounds.isNull ? 595 : max(595, bounds.maxX + 24, (bounds.maxY + 24) * ratio)
+        paperSize = CGSize(width: width, height: width / ratio)
     }
 }
