@@ -1,0 +1,51 @@
+import SwiftUI
+import PencilKit
+
+/// Editable PencilKit drawing. Callers keep editable ink separate from paper/PDF.
+enum DrawingTool: String, CaseIterable {
+    case pen, eraser, lasso
+}
+
+struct PencilCanvas: UIViewRepresentable {
+    var drawing: PKDrawing
+    var tool: DrawingTool
+    var color: UIColor
+    var width: CGFloat
+    var onDrawingChanged: (PKDrawing) -> Void
+
+    func makeCoordinator() -> Coordinator { Coordinator(parent: self) }
+
+    func makeUIView(context: Context) -> PKCanvasView {
+        let canvas = PKCanvasView()
+        canvas.backgroundColor = .clear
+        canvas.isOpaque = false
+        canvas.drawingPolicy = .pencilOnly
+        canvas.drawing = drawing
+        canvas.delegate = context.coordinator
+        return canvas
+    }
+
+    func updateUIView(_ canvas: PKCanvasView, context: Context) {
+        context.coordinator.parent = self
+        if canvas.drawing.dataRepresentation() != drawing.dataRepresentation() {
+            canvas.drawing = drawing
+        }
+        switch tool {
+        case .pen:
+            canvas.tool = PKInkingTool(.pen, color: color, width: width)
+        case .eraser:
+            canvas.tool = PKEraserTool(.vector)
+        case .lasso:
+            canvas.tool = PKLassoTool()
+        }
+    }
+
+    final class Coordinator: NSObject, PKCanvasViewDelegate {
+        var parent: PencilCanvas
+        init(parent: PencilCanvas) { self.parent = parent }
+
+        func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
+            parent.onDrawingChanged(canvasView.drawing)
+        }
+    }
+}
