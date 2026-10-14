@@ -4,9 +4,9 @@
 
 ## Product goal
 
-The brother in Mississauga has an iPad and a third-party stylus but **no Mac**. The developer has a Mac. Need an **independently installed app** with handwriting, eraser, colours/widths, four templates, pages/folders, PDF annotations and lasso moving/scaling. It must be offline-first and preserve notes across app upgrades.
+The brother in Mississauga has a **Windows PC + iPad** and a third-party stylus, but no Mac. The developer has a Mac. Need an **independently installed app** with handwriting, eraser, colours/widths, four templates, pages/folders, PDF annotations and lasso moving/scaling. It must be offline-first and preserve notes across app upgrades.
 
-**No Apple Developer Program ($99/year), no App Store release.** Apple's free provisioning expires in seven days. [SideStore](https://docs.sidestore.io/docs/installation/install) is the first candidate for re-signing on-device, but **requires a computer to pair the student's iPad at first setup** and may require it again if pairing expires. Permanent fee-free, signing-free deployment is **not promised**.
+**No Apple Developer Program ($99/year), no App Store release.** Apple's free provisioning expires in seven days. [SideStore](https://docs.sidestore.io/docs/installation/install) is the first candidate for re-signing on-device, but **can be set up locally by the student on his own supported Windows PC** (via USB + iloader); Windows may also be needed later if device pairing expires. Permanent fee-free, signing-free deployment is **not promised**.
 
 ## State
 
@@ -20,9 +20,10 @@ The brother in Mississauga has an iPad and a third-party stylus but **no Mac**. 
 1. Clone: `git clone https://github.com/hamperme/MyNotes-iPad.git`
 2. Install compatible Xcode and XcodeGen (`brew install xcodegen`).
 3. `./scripts/bootstrap.sh` and `./scripts/check.sh` on your Mac; fix any compile issues.
-4. Work on [#1 Native build](https://github.com/hamperme/MyNotes-iPad/issues/1) and [#10 SideStore delivery feasibility](https://github.com/hamperme/MyNotes-iPad/issues/10) **before** overbuilding.
-5. Test third-party stylus with `PKCanvasView.drawingPolicy` = `.pencilOnly` / `.anyInput` in the actual recipient iPad. Goodnotes compatibility is not proof it works as native PencilKit input.
-6. Add and test full backup/restore to Files/iCloud Drive before a real class notebook.
+4. The student can prepare his own Windows installation: [SideStore Windows prerequisites](https://docs.sidestore.io/docs/installation/prerequisites), [installation guide](https://docs.sidestore.io/docs/installation/install). He needs a USB data cable, compatible 64-bit Windows PC, iTunes/Apple Devices, iloader, LocalDevVPN and his own Apple Account. **None of this has been tested on his device yet.**
+5. Work on [#1 Native build](https://github.com/hamperme/MyNotes-iPad/issues/1) and [#10 SideStore delivery feasibility](https://github.com/hamperme/MyNotes-iPad/issues/10) **before** overbuilding.
+6. Test third-party stylus with `PKCanvasView.drawingPolicy` = `.pencilOnly` / `.anyInput` in the actual recipient iPad. Goodnotes compatibility is not proof it works as native PencilKit input.
+7. Add and test full backup/restore to Files/iCloud Drive before a real class notebook.
 
 ## Code
 
