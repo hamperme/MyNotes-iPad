@@ -10,11 +10,13 @@
 - **Repository target:** [`hamperme/MyNotes-iPad`](https://github.com/hamperme/MyNotes-iPad) (private; remote created)
 - **Working branch:** `feat/issue-5-external-pdf-import` (stacked on PR #11 at `65244843abbf9196ac494ef18d47f14401617af8`)
 - **Active task:** [Issue #5](https://github.com/hamperme/MyNotes-iPad/issues/5) — Files and external Open In PDF import, immutable originals, editable per-page ink. PDF export and physical WeChat acceptance remain open.
-- **Issue / PR:** [M1 Issue #2](https://github.com/hamperme/MyNotes-iPad/issues/2), related [M2 Issue #3](https://github.com/hamperme/MyNotes-iPad/issues/3); [current feature PR #9](https://github.com/hamperme/MyNotes-iPad/pull/9) uses `feat/issue-2-zoom-eraser-modes`, stacked on [ink/portrait PR #8](https://github.com/hamperme/MyNotes-iPad/pull/8), which is stacked on [M0 PR #7](https://github.com/hamperme/MyNotes-iPad/pull/7).
+- **Issue / PR:** [PDF Issue #5](https://github.com/hamperme/MyNotes-iPad/issues/5), [PDF import PR #12](https://github.com/hamperme/MyNotes-iPad/pull/12), stacked on [SideStore tooling PR #11](https://github.com/hamperme/MyNotes-iPad/pull/11) → editor #9 → #8 → #7. Review, do not auto-merge.
 - **Actual verification:** User confirmed prior black ink/portrait repair. Current 6 unit + 2 UI regressions pass, including strict rendered-landscape/pinch checks after restarting the dedicated simulator; pristine baseline and restored source both reproduce the same 4 missing-feature failures. All 33 pristine source hashes restored by rollback. Simulator build, signed iphoneos build, signature verification, fresh local note backup, in-place iPad installation, launch and running-process query passed. Physical acceptance of new zoom/pan, both eraser behaviors and palette/paging remains pending; detailed commands/results in TEST_PLAN.
 - **Status summary:** M0 startup accepted, PR review pending; basic handwriting skeleton only, not a complete MVP
 
 ## Current PDF import gate (2026-11-15)
+
+- **PR:** [#12 external PDF import](https://github.com/hamperme/MyNotes-iPad/pull/12), open for review; no merge.
 
 - Owner requested importing external PDFs, including WeChat. Implemented PDF document registration, library Files picker and `onOpenURL`, coordinated app-owned copy, additive optional PDF metadata, PDFKit background and unchanged per-page PencilKit storage.
 - Simulator full suite: **16 tests pass** (12 unit / 4 UI). Cold external file URL, mixed page sizes, paging, actual pinch, rotation and relaunch after removing the source pass. 50-page document retains original bytes and editable ink on pages 2/15/40. Initial PDFKit auto-fit padding caused 8 geometry assertions; fixed by 1:1 logical PDF scale with only outer zoom, then full suite passed. Not a WeChat share-sheet test.
