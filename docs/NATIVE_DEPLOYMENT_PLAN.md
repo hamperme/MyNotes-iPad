@@ -1,3 +1,5 @@
+> **STATUS UPDATE 2026-11-15:** The Mac/simulator and owner iPad build/install/test records are present in prior PRs #7–#12 and in [docs/TEST_PLAN.md](TEST_PLAN.md). Code for unsigned IPA generation has been integrated. The planning-only claim in the historical text below is superseded for build evidence **but not** for SideStore/recipient acceptance. See [PROGRESS.md](../PROGRESS.md) and [Windows Codex setup guide](WINDOWS_CODEX_SIDESTORE_DEPLOY.md). First SideStore install/refresh, recipient pen validation, full backup/restore remain NOT RUN.
+
 # MyNotes-iPad — native iPad app and remote no-fee installation plan
 
 **Date:** 2026-10-14  
