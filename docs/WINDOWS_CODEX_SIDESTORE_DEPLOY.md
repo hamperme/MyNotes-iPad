@@ -1,7 +1,34 @@
 # Windows Codex × SideStore — MyNotes iPad 部署及验收手册
 
-Updated 2026-11-15 · Issue #10 · **Instructions only, not execution proof.**
+Updated 2026-11-15 · Issue #10 · **Release files uploaded; SideStore execution still NOT RUN.**
 For: developer's Mac + student's Windows PC and iPad. This is a standalone native SwiftUI/PencilKit app, **NOT a PWA**.
+
+> **CURRENT DEPLOYMENT INPUT — 2026-11-15 (GitHub Pre-release available).** Two unsigned test IPAs, their manifests, and SHA256SUMS are already published in this repository. **Do not rebuild on the Mac just for the first SideStore installation.** Use the verified release first. SideStore sign/install/refresh is **NOT RUN**. The backup/restore release gate is still open.
+
+## Start here — download the already built release
+
+1. Open [sidestore-trial-pdf-2026-11-15](https://github.com/hamperme/MyNotes-iPad/releases/tag/sidestore-trial-pdf-2026-11-15) in a **browser signed into a GitHub account with READ access to this private repository**. Read permission is enough; the student does not need Git, Codex repository access or write/edit permission. The release is intentionally not public.
+2. Under **Assets**, download `MyNotes-Trial-build-1.ipa`, `MyNotes-Trial-build-2.ipa` and `SHA256SUMS.txt`. The manifest JSONs are optional for installation but useful for investigation. If the student has no GitHub access, the owner downloads those assets using their own authorized account and transfers them by USB/AirDrop/private file sharing. **Do not share the owner's GitHub credentials or PAT.**
+3. Windows PowerShell (run from the folder containing downloaded files):
+
+~~~powershell
+Get-FileHash -Algorithm SHA256 .\MyNotes-Trial-build-1.ipa
+Get-FileHash -Algorithm SHA256 .\MyNotes-Trial-build-2.ipa
+Get-Content .\SHA256SUMS.txt
+~~~
+
+GitHub Release asset SHA-256 values independently confirmed from its metadata:
+
+| Asset | SHA-256 |
+| --- | --- |
+| `MyNotes-Trial-build-1.ipa` | `6ef0f2261f87ff83700ae5aed0de69edcd7ff0f2907b7f5c734a64469403933e` |
+| `MyNotes-Trial-build-2.ipa` | `788274a6dd8bca0e9762700b4cff30fc1e3cd1c981724a16875e0f18069e42f9` |
+
+Both expected values must match the Windows outputs and SHA256SUMS. On mismatch: STOP, redownload from the private release. The owner reports independent re-download/verification succeeded; this author independently checked GitHub release metadata, **not** the binary bytes.
+4. Transfer **build 1** to the iPad **Files** app first; do not install build 2 yet. Follow the SideStore/iloader instructions below: set up SideStore and refresh itself, install build 1, create expendable test notes and verify refresh, then install build 2 as an **in-place upgrade without deleting build 1**.
+5. If Windows Codex lacks access to this private repo, it can follow this text handed over by the owner; it cannot authenticate to GitHub on the student's behalf. No need to edit GitHub to complete the experiment. Send sanitized PASS/FAIL/NOT RUN back to the owner to update Issue #10.
+
+**Release provenance:** GitHub prerelease source ref `7f73f7e4c14ff648852e30d422de541eafd467c3` (#12). Compared with merged main `c274de8f7fd82f81d9bcab4b0bfb3d058ace75aa`: all 11 `MyNotes/**` source files and `project.yml` paths matched by Git object SHA at review time. GitHub packages are unsigned, iPad-only, arm64, iOS 17+; the download cannot launch until SideStore signs and installs it. This is a **test**, not the stable school-notes release.
 
 ## 0. Roles and critical rules
 
@@ -39,7 +66,7 @@ shasum -a 256 build/sidestore/trial-{1,2}/MyNotes.ipa
 
 Output per trial: MyNotes.ipa, manifest.json, MyNotes.ipa.sha256. Verify both IPA_PACKAGE_PASS outputs, exit status 0, iPad-only, arm64, correct ID/build number, unsigned. Output directories must be NEW/EMPTY; the script refuses overwriting an existing IPA. Rename a **copy** to MyNotes-Trial-1.ipa and MyNotes-Trial-2.ipa so the student can distinguish versions.
 
-**Mac build is mandatory.** Windows cannot run Xcode or compile the SwiftUI/PencilKit app. Packaging proves ZIP structure, NOT SideStore install success. Do not claim otherwise. Use private file transfer (AirDrop/USB/private shared file), include expected SHA-256. Avoid publishing app with credentials or private user notes.
+**Mac build is only mandatory when producing a NEW IPA, not for this already published test release.** Windows cannot run Xcode or compile the SwiftUI/PencilKit app. Packaging proves ZIP structure, NOT SideStore install success. Do not claim otherwise. Use private file transfer (AirDrop/USB/private shared file), include expected SHA-256. Avoid publishing app with credentials or private user notes.
 
 ## 2. Student/Windows Codex — prerequisites, verified from SideStore official guide
 
