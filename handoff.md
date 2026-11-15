@@ -6,6 +6,12 @@
 **Deployment feasibility:** [Issue #10](https://github.com/hamperme/MyNotes-iPad/issues/10).  
 **Runbook for brother's Windows Codex:** [docs/WINDOWS_CODEX_SIDESTORE_DEPLOY.md](docs/WINDOWS_CODEX_SIDESTORE_DEPLOY.md)
 
+## Immediate device update — 2026-11-15
+
+- Recipient Windows PC currently **does not detect their iPad**. Both parties and the developer's Mac are physically together, so use **developer's Mac + USB + iloader for the initial SideStore install/pairing**, while signing with the **recipient's own Apple Account**; iPad then refreshes independently over Wi-Fi + LocalDevVPN. Do not force Windows detection repair before attempting a Mac-first install.
+- Pairing may expire following iPadOS updates/reset or unpredictably. Without a functional Windows pairing fallback, future repair may require a Mac visit. Resolve Windows USB device detection as a secondary reliability task; **not** a blocker to initial Mac setup.
+- Updated [runbook](docs/WINDOWS_CODEX_SIDESTORE_DEPLOY.md#当前现场替代方案由开发者-mac-首次安装-sidestore2026-11-15). Actual installation/refresh remains **NOT RUN**; test only on disposable notebooks.
+
 ## Release update — 2026-11-15
 
 - [GitHub prerelease: sidestore-trial-pdf-2026-11-15](https://github.com/hamperme/MyNotes-iPad/releases/tag/sidestore-trial-pdf-2026-11-15) has **two prebuilt unsigned IPAs (CFBundleVersion 1/2), matching manifests, and SHA256SUMS.txt**, authenticated owner has reported downloading/rechecking file checksums. GitHub metadata has SHA-256 digests for all 5 assets; code sources + project.yml of source commit match current main by Git object SHA.
