@@ -6,17 +6,30 @@ enum DrawingTool: String, CaseIterable {
     case pen, eraser, lasso
 }
 
+enum EraserMode: String, CaseIterable {
+    case stroke, partial
+}
+
 struct PencilCanvas: UIViewRepresentable {
     var drawing: PKDrawing
     var tool: DrawingTool
     var color: UIColor
     var width: CGFloat
+    var eraserMode: EraserMode = .stroke
     var onDrawingChanged: (PKDrawing) -> Void
 
     func makeCoordinator() -> Coordinator { Coordinator(parent: self) }
 
     func makeUIView(context: Context) -> PKCanvasView {
         let canvas = PKCanvasView()
+        // White paper must not invert black ink when the app uses Dark Mode.
+        canvas.overrideUserInterfaceStyle = .light
+        canvas.isScrollEnabled = false
+        // Only the outer paper viewport may handle finger navigation.
+        canvas.pinchGestureRecognizer?.isEnabled = false
+        canvas.panGestureRecognizer.isEnabled = false
+        canvas.minimumZoomScale = 1
+        canvas.maximumZoomScale = 1
         canvas.backgroundColor = .clear
         canvas.isOpaque = false
         canvas.drawingPolicy = .pencilOnly
@@ -26,15 +39,16 @@ struct PencilCanvas: UIViewRepresentable {
     }
 
     func updateUIView(_ canvas: PKCanvasView, context: Context) {
+        canvas.overrideUserInterfaceStyle = .light
         context.coordinator.parent = self
         if canvas.drawing.dataRepresentation() != drawing.dataRepresentation() {
             canvas.drawing = drawing
         }
         switch tool {
         case .pen:
-            canvas.tool = PKInkingTool(.pen, color: color, width: width)
+            canvas.tool = PKInkingTool(.pen, color: color.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light)).withAlphaComponent(1), width: width)
         case .eraser:
-            canvas.tool = PKEraserTool(.vector)
+            canvas.tool = PKEraserTool(eraserMode == .stroke ? .vector : .bitmap)
         case .lasso:
             canvas.tool = PKLassoTool()
         }
