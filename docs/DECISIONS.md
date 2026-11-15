@@ -47,3 +47,9 @@ The floating palette is moved by its dedicated handle, not by dragging tool butt
 Use PKEraserTool(.vector) for whole strokes and .bitmap for local erasing. This does not mean clearing every stroke on the page. Remember the selected eraser mode during pen/eraser switching. Declare all four iPad interface orientations explicitly in generated project settings and the isolated test project. Preserve user signing in existing local generated projects; apply orientation keys without regenerating those projects.
 
 API references: Apple [UIScrollView](https://developer.apple.com/documentation/uikit/uiscrollview) and [PKCanvasView](https://developer.apple.com/documentation/pencilkit/pkcanvasview).
+
+## 2026-11-15 — External PDF copy and shared page viewport (Issue #5)
+
+Use both SwiftUI fileImporter (PDF-only) and onOpenURL with `com.adobe.pdf` document registration. Keep scoped access alive until off-main-thread coordinated copy and PDF validation complete. Commit a new UUID directory and index atomically, preserving original bytes and all existing records. Reject encrypted or oversized documents explicitly.
+
+Reuse the current per-page PencilKit canvas and outer scroll/zoom transform. A noninteractive PDFKit single-page PDFView renders the crop box including PDF page rotation and existing annotations below the ink. A full PDFView overlay-provider rewrite would replace existing gesture/paging behavior unnecessarily. Crop/rotation, mixed page sizes, zoom and persistence require executable regressions. PDF export is not part of this change. Added metadata is optional; old data reads without migration. Source rollback is not a device-data downgrade strategy; see PDF_IMPORT.md.

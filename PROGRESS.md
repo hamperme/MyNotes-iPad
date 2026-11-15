@@ -1,7 +1,7 @@
 # Project Progress / 项目进度
 
 > **Native workflow restored:** owner confirmed native development and remote main now agrees. Previous build/install evidence below remains valid for the connected owner iPad; it does not establish SideStore or recipient-device acceptance.
-Last reviewed: **2026-10-14**
+Last reviewed: **2026-11-15**
 Overall: **M0 build/install/launch passed with user-confirmed visible UI; PR review pending; M1 handwriting/persistence acceptance next**
 Next milestone: **M1 — verify full-screen zoom, floating tools and dual erasers on iPad; remaining Pencil/persistence acceptance**
 
@@ -11,7 +11,7 @@ Next milestone: **M1 — verify full-screen zoom, floating tools and dual eraser
 | M1 PencilKit 手写 | 🟡 部分实现与回归验证 | 画笔、双模式橡皮擦、颜色/笔粗、双指缩放、本地保存；新功能真机验收待确认 | Pencil 真机顺滑使用，重启不丢数据 |
 | M2 多页与模板 | 🟡 部分实现 | 可新增/切换页面及四种模板 | 页面删除/排序、模板位置与笔迹对齐可靠 |
 | M3 笔记管理 | ⚪ 未开始 | 仅简单笔记列表/新建 | 文件夹、重命名、删除与恢复策略 |
-| M4 PDF 批注 | ⚪ 未开始 | 已选 PDFKit + PencilKit 方案 | 导入、多页坐标正确、批注可编辑、PDF 导出 |
+| M4 PDF 批注 | 🟡 导入与独立批注层已实现 | Files / Open In 导入、原件保留、逐页编辑；16 项自动回归通过，微信真机待验收 | 导入、多页坐标正确、批注可编辑、PDF 导出 |
 | M5 稳定性与备份 | ⚪ 未开始 | 原子写入笔迹/索引的基础实现 | 撤销/重做、错误提示、备份/恢复、压力回归 |
 
 ## 现在的主要阻塞项
@@ -19,9 +19,13 @@ Next milestone: **M1 — verify full-screen zoom, floating tools and dual eraser
 1. 开发者模式与签名信任阻塞已解除：用户确认信任后，启动退出 0，后续设备进程查询确认 MyNotes 正在运行。用户已确认看到笔记界面；接下来审查 PR #7，并进行 M1 手写/保存验收。
 2. M0 构建/安装/启动验收已满足，Issue #1 暂保留开放等待 PR #7 审查；M1–M5 尚未验收。M0 成功不等于手写功能可用。
 3. 保存失败目前仅写日志、没有用户可见提示；正式记笔记前必须补上。
-4. PDF 页面可编辑笔迹层的坐标与缩放策略还未落地。
+4. PDF 导入与逐页笔迹坐标/缩放策略已落地并通过 Simulator 回归；微信真机、导出和大文件性能待验收。
 
 ## 最近变更
+
+- **2026-11-15 — 外部 PDF 导入（#5，部分范围）**：新增系统文件选择器与 Open In 接收（微信可通过其他应用打开，具体界面待真机确认）；复制原件、稳定页 ID、独立可编辑笔迹、裁剪/旋转背景与共享缩放。完整 16 项 Simulator 回归通过，含 50 页及第 2/15/40 页笔迹重开。基线/回滚与 iPad 更新证据见 TEST_PLAN。导出未实现，不关闭 #5。
+- **2026-11-15 — 签名恢复**：同身份 Xcode refresh 后用户信任开发者并确认“可以打开了”；原有五个笔记文件逐一哈希不变。SideStore 安装/刷新仍未验收。
+
 
 - **2026-10-14 — 全屏编辑与手势/橡皮擦（#2，涉及 #3）**：用户已确认黑色笔迹、纵向纸张均正常。继续加入整页双指缩放/移动、整笔与局部擦除、可拖动且左右竖排的悬浮工具栏；翻页与加页合并到右下角。底层笔迹坐标与存储格式不变；8 项自动回归通过，基线与回滚均复现 4 项缺失功能；构建/签名/备份/原位更新/启动通过。验证结果见 TEST_PLAN，新的真机体验待用户确认。
 

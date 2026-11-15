@@ -64,3 +64,6 @@
 ## 项目安全边界
 
 仅供自用、不上架。App 的笔迹暂时只保存在本地 Application Support 容器。卸载 App 可能删除数据；**正式使用之前必须完成可恢复备份和数据迁移测试**。
+## PDF import
+
+Native Files / external Open In import and editable per-page ink: [usage, limits and preservation](docs/PDF_IMPORT.md). WeChat physical acceptance and annotated PDF export are separate pending gates; see [test evidence](docs/TEST_PLAN.md).

@@ -40,7 +40,18 @@ struct NoteEditorView: View {
                 ZStack(alignment: .bottomTrailing) {
                     ZoomablePaper(size: paperSize, request: zoomRequest, fitWholePage: fitWholePage) {
                         ZStack {
-                            PaperBackground(style: page.style)
+                            if page.pdfPageIndex != nil {
+                                if let pdfPage = store.pdfPage(noteID: noteID, pageID: page.id) {
+                                    PDFPageBackground(page: pdfPage)
+                                } else {
+                                    Color.white.overlay {
+                                        Text("PDF 原文件无法读取，请保留笔记并从备份恢复原文件。")
+                                            .foregroundStyle(.red).padding()
+                                    }
+                                }
+                            } else {
+                                PaperBackground(style: page.style)
+                            }
                             PencilCanvas(drawing: drawing, tool: tool, color: UIColor(color),
                                          width: CGFloat(width), eraserMode: eraserMode) { edited in
                                 guard page.id == pageID else { return }
@@ -178,7 +189,7 @@ struct NoteEditorView: View {
             Text("书写设置").font(.headline)
             Text("笔粗 \(width, specifier: "%.0f")")
             Slider(value: $width, in: 1...20).accessibilityLabel("笔粗")
-            if let page {
+            if let page, page.pdfPageIndex == nil {
                 Picker("纸张", selection: Binding(get: { page.style }, set: {
                     store.setPaperStyle($0, noteID: noteID, pageID: pageID)
                 })) {
@@ -247,6 +258,10 @@ struct NoteEditorView: View {
 
     private func loadPage() {
         drawing = store.drawing(noteID: noteID, pageID: pageID)
+        if let pdfPage = store.pdfPage(noteID: noteID, pageID: pageID) {
+            paperSize = PDFImportService.pageSize(pdfPage)
+            return
+        }
         let bounds = drawing.bounds
         let ratio: CGFloat = 210 / 297
         let width = bounds.isNull ? 595 : max(595, bounds.maxX + 24, (bounds.maxY + 24) * ratio)

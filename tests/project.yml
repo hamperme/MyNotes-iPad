@@ -17,6 +17,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: local.mynotes.editor.regression
         GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_FILE: ../MyNotes/Info.plist
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
@@ -24,7 +25,7 @@ targets:
   MyNotesTests:
     type: bundle.unit-test
     platform: iOS
-    sources: [EditorRegressionTests.swift]
+    sources: [EditorRegressionTests.swift, PDFImportTests.swift, PDFCapabilityTests.swift]
     dependencies:
       - target: MyNotes
     settings:
@@ -33,7 +34,7 @@ targets:
   MyNotesUITests:
     type: bundle.ui-testing
     platform: iOS
-    sources: [EditorUITests.swift]
+    sources: [EditorUITests.swift, PDFEntryUITests.swift, PDFOpenInUITests.swift]
     dependencies:
       - target: MyNotes
     settings:

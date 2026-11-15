@@ -5,16 +5,25 @@
 
 ## Snapshot
 
-- **Updated:** 2026-10-14
-- **Last actor:** Codex (Issue #10 unsigned IPA and local SideStore trial preparation)
+- **Updated:** 2026-11-15
+- **Last actor:** Codex (Issue #5 external PDF import)
 - **Repository target:** [`hamperme/MyNotes-iPad`](https://github.com/hamperme/MyNotes-iPad) (private; remote created)
-- **Working branch:** `feat/issue-10-sidestore-ipa` (stacked on PR #9 at `7d03db7dbda03ea24996c2b036446f4cb4ad6154`)
-- **Active task:** [Issue #10](https://github.com/hamperme/MyNotes-iPad/issues/10) — packaging complete; connected-owner-iPad SideStore trial awaiting owner login and device steps. Target student iPad is absent.
+- **Working branch:** `feat/issue-5-external-pdf-import` (stacked on PR #11 at `65244843abbf9196ac494ef18d47f14401617af8`)
+- **Active task:** [Issue #5](https://github.com/hamperme/MyNotes-iPad/issues/5) — Files and external Open In PDF import, immutable originals, editable per-page ink. PDF export and physical WeChat acceptance remain open.
 - **Issue / PR:** [M1 Issue #2](https://github.com/hamperme/MyNotes-iPad/issues/2), related [M2 Issue #3](https://github.com/hamperme/MyNotes-iPad/issues/3); [current feature PR #9](https://github.com/hamperme/MyNotes-iPad/pull/9) uses `feat/issue-2-zoom-eraser-modes`, stacked on [ink/portrait PR #8](https://github.com/hamperme/MyNotes-iPad/pull/8), which is stacked on [M0 PR #7](https://github.com/hamperme/MyNotes-iPad/pull/7).
 - **Actual verification:** User confirmed prior black ink/portrait repair. Current 6 unit + 2 UI regressions pass, including strict rendered-landscape/pinch checks after restarting the dedicated simulator; pristine baseline and restored source both reproduce the same 4 missing-feature failures. All 33 pristine source hashes restored by rollback. Simulator build, signed iphoneos build, signature verification, fresh local note backup, in-place iPad installation, launch and running-process query passed. Physical acceptance of new zoom/pan, both eraser behaviors and palette/paging remains pending; detailed commands/results in TEST_PLAN.
 - **Status summary:** M0 startup accepted, PR review pending; basic handwriting skeleton only, not a complete MVP
 
-## Current SideStore gate (2026-10-14)
+## Current PDF import gate (2026-11-15)
+
+- Owner requested importing external PDFs, including WeChat. Implemented PDF document registration, library Files picker and `onOpenURL`, coordinated app-owned copy, additive optional PDF metadata, PDFKit background and unchanged per-page PencilKit storage.
+- Simulator full suite: **16 tests pass** (12 unit / 4 UI). Cold external file URL, mixed page sizes, paging, actual pinch, rotation and relaunch after removing the source pass. 50-page document retains original bytes and editable ink on pages 2/15/40. Initial PDFKit auto-fit padding caused 8 geometry assertions; fixed by 1:1 logical PDF scale with only outer zoom, then full suite passed. Not a WeChat share-sheet test.
+- Baseline and rollback each reproduce the same two missing-PDF tests (exit 65); final matching ten-test suite passes (exit 0). All 39 original hashes restored; 47-file patch reconstruction verified. Signed same-identity iPad update/launch/process check passed; all five existing note files hash-identical before/after. See newest TEST_PLAN section. Source rollback preserves original checkout and does not downgrade device data. Do not open newly imported PDF notebooks in an old app that ignores PDF metadata and continue saving.
+- Next: user opens a PDF in WeChat → Open In → MyNotes (or Save to Files → MyNotes import), draws and reopens. Review stacked PR; no automatic merge, no closure of all #5. Export, heavy-document performance, backup restore and recipient stylus remain NOT RUN.
+- Separate refresh incident resolved: on 2026-11-15 the same-identity Xcode refresh installed successfully, user trusted the developer and replied “可以打开了”; five existing note files were hash-identical before/after. This is **not** SideStore refresh acceptance.
+- Remote main now states recipient has **Windows PC + iPad**, not “no computer”; first pairing can be attempted there. Preserve this correction when reconciling stacked docs; do not inherit main's stale claim that no native build ever ran.
+
+## Deferred SideStore gate (2026-10-14)
 
 - **Current PR:** [#11 unsigned IPA packaging and SideStore trial](https://github.com/hamperme/MyNotes-iPad/pull/11), stacked on #9; open for review, do not merge automatically.
 
@@ -52,7 +61,7 @@
 - Latest update installed and running on the user’s iPad; do not repeat Developer Mode/trust setup. Ask for physical gesture/eraser/layout feedback, then record it separately from automated results.
 - Review this stacked PR after PR #8; do not auto-merge or close the entire M1 issue. Keep raw logs, private note backup and signing identifiers out of Git.
 
-## Prior editor handoff (retained; current first action is SideStore gate above)
+## Prior editor handoff (retained; current first action is PDF acceptance above)
 
 1. Check `git status`, review `AGENTS.md`, `README.md`, `docs/ARCHITECTURE.md`, `docs/TEST_PLAN.md`.
 2. Mac generation/build have passed. Re-run `./scripts/check.sh` after source changes; do not replace the recorded successful build with an unverified claim.
@@ -65,10 +74,10 @@
 
 - **Runtime scope:** Simulator UI launch/gestures/layout and signed device install/launch passed. User confirmed prior black/portrait fixes. New physical Pencil erasing, pan/zoom, lasso and persistence still need acceptance.
 - **Build resources:** Historical device build failed with `No space left on device`; subsequent builds passed after space became available. No user files/caches were deleted. Keep resource-conscious builds; avoid treating that old failure as a current blocker.
-- **Data durability:** no debounce, backup/restore, file recovery, atomic metadata transaction, or storage error UI. Avoid using for irreplaceable notes.
+- **Data durability:** no debounce, in-app backup/restore or general file recovery. PDF import now commits index atomically and reports its errors; existing stroke saves still log errors only. Avoid using for irreplaceable notes.
 - **Page editing:** add/switch exists; delete/reorder not implemented; zoom added in this branch, physical acceptance pending.
 - **Lasso:** PKLassoTool wired; moving/scaling selected strokes is not verified on a device.
-- **PDF:** import/render/overlay/export not implemented. Need a page-ID-to-PDF-page map and coordinate tests.
+- **PDF:** import/render/independent overlay implemented; export, physical WeChat/Pencil acceptance and memory/performance remain pending.
 - **Folders:** not implemented; metadata model will need migration strategy.
 - **Undo/redo:** not exposed in UI; plan proper undo ownership in PKCanvasView.
 - **Security:** no secrets, signing certificates or user PDFs should be committed.
