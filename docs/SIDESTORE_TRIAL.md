@@ -1,3 +1,5 @@
+> **UPDATE 2026-11-15:** The recipient now has a Windows PC and iPad with access for local setup, and the release includes a separate [complete Windows Codex guide](WINDOWS_CODEX_SIDESTORE_DEPLOY.md). The trial installation/refresh remains **NOT RUN**; earlier references below to recipient being elsewhere describe a historical 2026-10-14 session, not current logistics.
+
 # SideStore local trial — Issue #10
 
 ## Scope and observed state (2026-10-14)
