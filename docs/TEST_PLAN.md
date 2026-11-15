@@ -14,6 +14,10 @@ Environment: macOS 26.5, Xcode 26.6 (17F113), iPad Simulator iOS 26.5; physical 
 - Expected Xcode warnings: no AppIntents dependency; test-launch diagnostic reports no debugger version but tests execute successfully. An auxiliary synthetic-PDF render tool reported a fontconfig warning; all three fixture pages rendered and were visually inspected. A fixture-generation attempt with another Python interpreter failed to import reportlab (exit 1); rerun with already-installed Python 3.11 succeeded (exit 0), no new package installation.
 - **NOT RUN / pending:** actual WeChat Open In menu and file-provider permission flow on physical iPad, physical Pencil annotation on imported PDF, password-protected import (intentionally rejected), export, large-file memory/performance, restore of private notes, SideStore installation/refresh. Do not close all #5 or mark M4 complete. Usage and fallback: [PDF_IMPORT.md](PDF_IMPORT.md).
 
+### Physical-user acceptance follow-up (2026-11-15)
+
+The user answered “没问题” when asked whether the external PDF displays and pages can be turned after the installed update. Record **external PDF import / visible pages / paging: PASS (user reported)**. The question offered direct WeChat Open In and a Files fallback; the reply does not distinguish the route used. Do not infer Pencil editing, physical relaunch persistence, export or performance acceptance. A fresh device process query was run separately; it is not visual PDF evidence.
+
 ## Evidence rules
 
 For every test: record **date, actor, device, OS, Xcode version, command/action, result, notes**. Do not turn `Not run` into `Pass` unless tested. Android/web evidence is not valid for Apple Pencil behavior.
