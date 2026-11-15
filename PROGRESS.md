@@ -2,6 +2,13 @@
 
 Reviewed: **2026-11-15**. Canonical app is **native SwiftUI + PencilKit + PDFKit**, not PWA. This update reconciles native changes from former stacked PRs #7, #8, #9, #11, #12.
 
+## GitHub Release delivery checkpoint — 2026-11-15
+
+- [Private test prerelease](https://github.com/hamperme/MyNotes-iPad/releases/tag/sidestore-trial-pdf-2026-11-15) exists with **two unsigned arm64 iPad IPA files** for `com.example.mynotes.sidestoretrial`, builds 1 and 2; two manifests; a common SHA256SUMS file. GitHub asset metadata supplies per-asset SHA256 and sizes. Owner reports downloading and verifying all bytes again; this review verified metadata, not the binary independently.
+- Release source commit is #12 `7f73f7e4`; App sources/project.yml match current merged main `c274de8f` by Git blob identity. Mac **rebuild not required** for first SideStore trial.
+- Windows Codex can download with a private-repo **read-permitted** GitHub account, or owner transfers downloaded assets to iPad/Windows. No GitHub edits required for student. [Release-first runbook](docs/WINDOWS_CODEX_SIDESTORE_DEPLOY.md).
+- **NOT RUN:** SideStore signing, actual IPA install, refresh, update preserving test note data, later 7-day refresh. Upload and SHA verification do not satisfy these gates.
+
 ## Review and evidence
 
 - **Native build / launch:** PR #7 records macOS 26.5 / Xcode 26.6, Simulator success, signed device build, codesign check, USB install, device process launch, and owner-confirmed visible library UI. Evidence comes from PR logs and docs; ChatGPT did NOT re-run Xcode.
@@ -34,7 +41,7 @@ Reviewed: **2026-11-15**. Canonical app is **native SwiftUI + PencilKit + PDFKit
 
 ## Next concrete tasks
 
-1. Mac Codex: pull integration/merged main, run `./scripts/bootstrap.sh`, `./scripts/check.sh`, simulator suite and `scripts/package-ipa.sh` **on Mac**, recording exact commands and results.
+1. Use already released IPA builds 1 and 2 for current Windows/iPad test; rebuild with Mac Codex only after a code change or if the published artifact fails verification.
 2. Windows Codex + student: follow [docs/WINDOWS_CODEX_SIDESTORE_DEPLOY.md](docs/WINDOWS_CODEX_SIDESTORE_DEPLOY.md); first install/refresh SideStore, then Trial-1, then in-place Trial-2; report sanitized statuses to #10.
 3. Record any integration bugs before any real class note-taking. Build data backup/restore before production adoption.
 
