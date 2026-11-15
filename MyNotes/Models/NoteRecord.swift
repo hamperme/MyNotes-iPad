@@ -16,6 +16,8 @@ enum PaperStyle: String, Codable, CaseIterable, Identifiable {
 struct PageRecord: Codable, Identifiable, Hashable {
     var id: UUID = UUID()
     var style: PaperStyle = .ruled
+    /// Optional so existing notebooks decode without a destructive migration.
+    var pdfPageIndex: Int?
 }
 
 struct NoteRecord: Codable, Identifiable {
@@ -24,4 +26,6 @@ struct NoteRecord: Codable, Identifiable {
     var createdAt: Date = .now
     var updatedAt: Date = .now
     var pages: [PageRecord] = [PageRecord()]
+    /// Only the app-owned, immutable "source.pdf" is accepted by NoteStore.
+    var sourcePDF: String?
 }
