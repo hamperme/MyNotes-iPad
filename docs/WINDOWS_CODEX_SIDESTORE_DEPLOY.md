@@ -30,6 +30,23 @@ Both expected values must match the Windows outputs and SHA256SUMS. On mismatch:
 
 **Release provenance:** GitHub prerelease source ref `7f73f7e4c14ff648852e30d422de541eafd467c3` (#12). Compared with merged main `c274de8f7fd82f81d9bcab4b0bfb3d058ace75aa`: all 11 `MyNotes/**` source files and `project.yml` paths matched by Git object SHA at review time. GitHub packages are unsigned, iPad-only, arm64, iOS 17+; the download cannot launch until SideStore signs and installs it. This is a **test**, not the stable school-notes release.
 
+## 当前现场替代方案：由开发者 Mac 首次安装 SideStore（2026-11-15）
+
+**设备现状：** 弟弟的 Windows 暂时检测不到 iPad，开发者 Mac 与弟弟 iPad 现在在同一地点。可用 **Mac + USB** 进行 SideStore 首次安装和配对；这**不会**使以后正常刷新必须回到这台 Mac。SideStore 的日常刷新是在 **iPad + Wi-Fi + LocalDevVPN** 完成。
+
+官方依据：[安装](https://docs.sidestore.io/docs/installation/install)、[准备](https://docs.sidestore.io/docs/installation/prerequisites)、[配对失效恢复](https://docs.sidestore.io/docs/advanced/pairing-file)。
+
+1. Mac 安装官方 [iloader](https://github.com/nab138/iloader/releases)（选择 macOS 版本）；可依官方 prerequisites 完成必要组件。不要下载未验证的第三方打包器。
+2. 将**弟弟的 iPad** 用数据线接入 Mac，解锁，在 iPad 上确认「信任此电脑」。在 iloader 中确认选中的设备是他的 iPad。
+3. **使用弟弟自己的 Apple Account 签名**：由弟弟本人在 iloader 输入密码/2FA，并点击 `Install SideStore (Stable)`；不必与 Mac 登录的 Apple ID 相同。Codex 不要读取凭据。
+4. iPad：设置 → 通用 → VPN 与设备管理 → 信任开发者；按 iPadOS 提示开启开发者模式并重启；在 App Store 安装并连接 `LocalDevVPN`，同时连接 Wi-Fi。
+5. iPad：打开 SideStore，用首次安装的**同一个签名 Apple Account** 登录；`My Apps` → 点 SideStore 的剩余天数完成**首次手动刷新**。
+6. 使用现成的 [私有 Release 2026-11-15](https://github.com/hamperme/MyNotes-iPad/releases/tag/sidestore-trial-pdf-2026-11-15) 两份 unsigned IPA，先核对 SHA-256，再安装 Build 1 创建**可丢弃测试笔记**、手动刷新、最后通过 Build 2 原位升级验证测试笔记未丢失。IPA 可以由开发者通过 AirDrop 发送到弟弟的 iPad「文件」App；Windows 无需 GitHub 写权限和 Xcode。
+7. **特别注意：** 配对文件与设备有关，当前安装所需的配对已由 Mac 写入 iPad/SideStore。正常每周刷新不用 Mac、也不用弟弟 Windows。但未来如果 iPadOS 更新/重置或者配对随机失效，官方要求连接一台能识别 iPad 的电脑重新置入配对文件；**若他的 Windows 仍然识别不到，就需要再次使用 Mac 或先修复 Windows 设备驱动问题**。尽量在分开前现场测试续签。
+8. 不要卸载已有 Xcode 签名的 `MyNotes`、不要把 MyNotes Trial 安装成相同 Bundle ID，也不要擅自批准吊销其他 App 依赖的签名证书。真实笔记备份恢复目前没有验收通过。
+
+**状态：Mac 首次替代路线可行，是否实际完成 USB 配对、SideStore 安装和刷新仍是 NOT RUN，需当事人验证后在 Issue #10 登记。**
+
 ## 0. Roles and critical rules
 
 - **Mac Codex / developer:** compile and package two separate unsigned IPA builds, run validator and tests, transfer those files and SHA-256 securely.
