@@ -1,46 +1,43 @@
-# Cross-agent handoff — MyNotes native iPad app
+# MyNotes-iPad — Codex / Claude / ChatGPT current handoff
 
-**Updated:** 2026-10-14  
-**Last actor:** ChatGPT — direction/issue/docs update only  
+**Updated:** 2026-11-15  
+**Current work:** integrate formerly stacked PRs #7 #8 #9 #11 #12 without importing outdated project-direction docs. **Native app remains canonical; PWA cancelled.**  
 **Canonical repo:** https://github.com/hamperme/MyNotes-iPad  
-**Product:** independent native iPad app, SwiftUI + PencilKit + PDFKit. **PWA is cancelled.**  
-**Current branch:** main (documentation and issue changes)  
-**Active work:** [#1 Mac build](https://github.com/hamperme/MyNotes-iPad/issues/1) + EARLY delivery gate [#10 SideStore feasibility](https://github.com/hamperme/MyNotes-iPad/issues/10).  
-**Actual verification:** GitHub docs/Issues updated; Apple and SideStore docs researched. **No Xcode build, installable IPA, SideStore installation, real iPad input test, backup or restore executed.**
+**Deployment feasibility:** [Issue #10](https://github.com/hamperme/MyNotes-iPad/issues/10).  
+**Runbook for brother's Windows Codex:** [docs/WINDOWS_CODEX_SIDESTORE_DEPLOY.md](docs/WINDOWS_CODEX_SIDESTORE_DEPLOY.md)
 
-## Recipient logistics
+## Test truth
 
-- Developer: Mac available.
-- Student: in Mississauga, has **Windows PC + iPad**, no Mac; third-party Pencil works in Goodnotes/Notability according to user. Windows platform details and iPadOS version are not yet checked.
-- No paid Apple Developer Program and no public App Store listing.
-- **Student can do first SideStore USB pairing locally on his own Windows PC** with iloader, Apple device drivers and a data cable; repeat there if pairing file expires. Check Windows architecture/iPadOS and never claim pairing is already tested.
-- SideStore uses 7-day signing refreshed on-device; auto-refresh cannot be guaranteed. Apple free Personal Team expires after 7 days.
+- Previous contributors report real Mac/owner-iPad and Simulator tests (recorded in PR bodies and docs/TEST_PLAN.md), including 16 XCTest tests for PDF import, 8 validator tests, signed in-place device install with previously stored test data preserved.
+- **ChatGPT review here is code inspection and GitHub ref/tree comparison only. Xcode, SideStore and recipient device NOT RUN in this review.**
+- Installation/refresh via SideStore, real WeChat share sheet, third-party Pencil, complete backup/restore, full PDF export are **NOT DONE**. Do not imply they passed.
 
-## Next agent's first task
+## Current constraints
 
-1. Pull current main, read [docs/NATIVE_DEPLOYMENT_PLAN.md](docs/NATIVE_DEPLOYMENT_PLAN.md), PROGRESS.md, AGENTS.md, ROADMAP.md, relevant source and open PRs.
-2. Run on **actual Mac**: `./scripts/bootstrap.sh`, `./scripts/check.sh`. Fix build issues under #1; report exact Xcode version and commands.
-3. Identify and test IPA export/build path without paid Apple Developer Program. Do **not** claim archive/export works without actual test.
-4. Prepare SideStore installation/refresh test instructions and realistic requirements under #10. Use student's **own Windows PC**, USB, iTunes/Apple Devices, iloader, LocalDevVPN to verify first pairing per SideStore official prerequisites; never request credentials or pairing files. Mark NOT RUN until actual success.
-5. Then test `PKCanvasView` with third-party Pencil using both `.pencilOnly` and `.anyInput`, recording palm rejection and lasso.
-6. Maintain a strict 'not for irreplaceable class notes' warning until backup/restore is proven.
+- Developer owns Mac; recipient brother has **Windows PC + iPad**, no Mac, in Mississauga; his clone stylus works in Goodnotes/Notability (owner's report), not yet tested with this PKCanvasView.
+- No paid Apple Developer Program. Apple free app signatures expire in seven days; SideStore requires initial Windows pairing and may need re-pairing.
+- Preserve signed existing app and private notes. Use distinct MyNotes Trial Bundle ID for experiment. **No uninstall or overwrites**. Apple sign-in/2FA and device trust are exclusively the human user's actions.
+- Main at previous baseline used stale "never built" statement, but earlier stacked PRs document actual testing. This integration preserves current instructions and acknowledges verified previous evidence.
 
-## Work already in repository
+## Change set
 
-Current project includes editable PKDrawing, paper templates, page switch/create and basic editor scaffold; these are **draft source implementations, not proven working app features**. Original PWA documents in https://github.com/hamperme/maplehub-study are archived history; original StudyHub website remains a separate site.
+The integration takes 26 code, test and historical technical docs files from PR #12 final branch, covering PDF importer and stable per-page ink, full-screen portrait editor, colors, lasso, eraser modes, unsigned IPA packaging and tests. It adds the Windows Codex SideStore deployment guide and reconciles README/PROGRESS/handoff; it preserves current AGENTS.md/CLAUDE.md/ROADMAP.md and native deployment route in main.
 
-## Non-negotiable collaboration rules
+## Required next steps
 
-- Do not ask for or store student's Apple Account password, signing keys, device pairing files, private PDFs or notes in GitHub.
-- Work in one Issue branch per task; PR reviews and actual test commands/results.
-- Never change app Bundle ID unnecessarily, uninstall to upgrade, or overwrite notebook data. Add backup/restore before relying on update/re-sign cycle.
-- Every change updates PROGRESS.md and this handoff, including files changed, tests PASS/FAIL/NOT RUN, migration impacts and the next exact action.
-- Use [deployment plan](docs/NATIVE_DEPLOYMENT_PLAN.md) for installation facts. Do not represent the PWA as still active.
+1. On Mac, pull current merged main; run build/test/packager with a separate clean output directory. Add actual run results to the Issue and docs.
+2. Windows Codex and student follow the complete runbook; **first manually refresh SideStore before installing Trial IPA**, then test Trial build 1 → 2 retaining disposable notes.
+3. If actual third-party stylus produces no ink, investigate PencilKit `.pencilOnly` vs `.anyInput` plus palm rejection. Do not switch untested silently.
+4. Complete backup/restore + visible saving errors prior to using this app for irreplaceable class notes.
+5. Keep one task per PR, update PROGRESS.md and handoff.md with actual commands and verification, not assumptions.
 
-## Handoff log (newest first)
+## Safety
 
-| Date | Actor | Work | Verified | Next |
+Never collect/sign into student's Apple Account or transmit pairing files, certificates, backup notes, UDIDs, passwords, or full device logs in GitHub. A ZIP-validated unsigned IPA is not evidence of successful SideStore signing, install or refresh.
+
+## Log
+
+| Date | Actor | Outcome | Verification | Next |
 |---|---|---|---|---|
-| 2026-10-14 | ChatGPT | Corrected recipient setup: Windows PC available for SideStore pairing; verified official Windows/iloader guide | GitHub docs/Issue only, no physical setup or Xcode test | Verify Windows compatibility; perform #10 pairing/IPA trial |
-| 2026-10-14 | ChatGPT | Reinstated native plan, revived native Issues and added SideStore feasibility task | GitHub docs/Issues only; NO Xcode/device test | Issue #1 build; #10 SideStore feasibility and physical pairing plan |
-| 2026-10-14 | ChatGPT | Earlier PWA plan created in maplehub-study (now superseded) | No PWA code built | Native-first per latest owner request |
+| 2026-11-15 | ChatGPT | Static code review and integrated 5 stacked PR changes; authored Windows Codex deployment runbook | GitHub file/commit/tree inspection; prior PR test evidence; macOS/iPad/Windows not run by reviewer | Build merged main on Mac; first SideStore sign/refresh on student's device |
+| 2026-10-14 | Codex (per PR records) | Native Mac/iPad build, editor and IPA packaging prototype | See #7–#11 PR tests and docs/TEST_PLAN.md | On-device SideStore trial |
