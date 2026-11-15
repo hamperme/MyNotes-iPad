@@ -6,6 +6,12 @@
 **Deployment feasibility:** [Issue #10](https://github.com/hamperme/MyNotes-iPad/issues/10).  
 **Runbook for brother's Windows Codex:** [docs/WINDOWS_CODEX_SIDESTORE_DEPLOY.md](docs/WINDOWS_CODEX_SIDESTORE_DEPLOY.md)
 
+## Release update — 2026-11-15
+
+- [GitHub prerelease: sidestore-trial-pdf-2026-11-15](https://github.com/hamperme/MyNotes-iPad/releases/tag/sidestore-trial-pdf-2026-11-15) has **two prebuilt unsigned IPAs (CFBundleVersion 1/2), matching manifests, and SHA256SUMS.txt**, authenticated owner has reported downloading/rechecking file checksums. GitHub metadata has SHA-256 digests for all 5 assets; code sources + project.yml of source commit match current main by Git object SHA.
+- First SideStore trial now **uses those prebuilt release files** — no fresh Mac compile necessary for this test. Download needs private repo read access, alternatively owner transfers files; no editing rights or Apple password sharing required.
+- Full [Windows Codex runbook](docs/WINDOWS_CODEX_SIDESTORE_DEPLOY.md) updated with release artifact names/hashes. **SideStore installation, refresh and in-place update remain NOT RUN**, regardless of asset upload success.
+
 ## Test truth
 
 - Previous contributors report real Mac/owner-iPad and Simulator tests (recorded in PR bodies and docs/TEST_PLAN.md), including 16 XCTest tests for PDF import, 8 validator tests, signed in-place device install with previously stored test data preserved.
@@ -25,7 +31,7 @@ The integration takes 26 code, test and historical technical docs files from PR 
 
 ## Required next steps
 
-1. On Mac, pull current merged main; run build/test/packager with a separate clean output directory. Add actual run results to the Issue and docs.
+1. For the current test use the **existing pre-release** (no Mac rebuild). The Mac packager is needed only for new source changes/rebuilds.
 2. Windows Codex and student follow the complete runbook; **first manually refresh SideStore before installing Trial IPA**, then test Trial build 1 → 2 retaining disposable notes.
 3. If actual third-party stylus produces no ink, investigate PencilKit `.pencilOnly` vs `.anyInput` plus palm rejection. Do not switch untested silently.
 4. Complete backup/restore + visible saving errors prior to using this app for irreplaceable class notes.
