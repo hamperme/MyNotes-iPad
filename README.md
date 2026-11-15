@@ -8,10 +8,17 @@ The brother in Mississauga has a **Windows PC + iPad** and a third-party stylus,
 
 **No Apple Developer Program ($99/year), no App Store release.** Apple's free provisioning expires in seven days. [SideStore](https://docs.sidestore.io/docs/installation/install) is the first candidate for re-signing on-device, but **can be set up locally by the student on his own supported Windows PC** (via USB + iloader); Windows may also be needed later if device pairing expires. Permanent fee-free, signing-free deployment is **not promised**.
 
+## Latest integrated functionality (2026-11-15)
+
+- Source includes portrait paper, canvas colors/erasers/lasso, full-screen movable toolbar, pinch zoom, per-page PDF import/markup, and unsigned arm64 iPad IPA packaging, with regression tests. These are **code implementations, not proof of recipient/SideStore use**.
+- For exact test evidence and unfinished release gates see [PROGRESS.md](PROGRESS.md).
+- **Windows Codex deployment:** [docs/WINDOWS_CODEX_SIDESTORE_DEPLOY.md](docs/WINDOWS_CODEX_SIDESTORE_DEPLOY.md) (Windows/iloader pairing, VPN, IPA verification, Trial install/refresh/update and troubleshooting).
+- SideStore installation and automatic refresh are NOT yet verified; backup/restore is NOT ready.
+
 ## State
 
 - SwiftUI project skeleton, XcodeGen spec, editable PKDrawing per-page storage and paper backgrounds **drafted**.
-- No verified Xcode build or device test, no working IPA, no tested SideStore setup, no tested PDF overlay/export, folders, backup or restore.
+- Earlier PRs document successful Xcode and owner iPad install plus simulator tests; see PROGRESS and docs/TEST_PLAN. The integrated main has **not been rerun**. Unsigned IPA packages built on contributor Mac are reported, but SideStore setup, recipient stylus, PDF export, folders, backup and restore remain UNTESTED/NOT IMPLEMENTED.
 - Do not use real school notes until note export/restore is verified.
 - Site https://maplehub.study remains a separate StudyHub; may optionally distribute instructions and an IPA later, but the domain **does not solve iOS signing**.
 
